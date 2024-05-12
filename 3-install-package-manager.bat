@@ -11,13 +11,11 @@ if exist "%ProgramData%\Chocolatey\bin\choco.exe" (
 )
 
 echo Checking if Scoop is installed...
-where scoop >nul 2>&1
-if %errorlevel%==0 (
+if exist "%USERPROFILE%\scoop" (
     echo Scoop is already installed.
 ) else (
     echo Scoop is not installed. Installing Scoop...
-    powershell Invoke-Expression (New-Object System.Net.WebClient).DownloadString('https://get.scoop.sh')
-    powershell Set-ExecutionPolicy RemoteSigned -scope CurrentUser
+    powershell -Command "Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://get.scoop.sh'))"
+    powershell -Command "Set-ExecutionPolicy RemoteSigned -scope CurrentUser"
 )
 
-pause

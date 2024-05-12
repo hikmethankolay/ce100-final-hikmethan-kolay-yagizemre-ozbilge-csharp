@@ -51,7 +51,7 @@ public class Compare : IComparer<Node>
     /// <param name="a">First Node object.</param>
     /// <param name="b">Second Node object.</param>
     /// <returns>true if frequency of 'a' is less than frequency of 'b', else false.</returns>
-    public int Compare(Node a, Node b)
+    public int CompareNodes(Node a, Node b)
     {
         if (a.Freq == b.Freq)
             return a.Data.CompareTo(b.Data); // If frequencies are equal, order by character
@@ -102,7 +102,7 @@ public class Huffman
     /// <returns>Root of the Huffman tree.</returns>
     public Node BuildHuffmanTree(Dictionary<char, int> freqMap)
     {
-        PriorityQueue<Node> pq = new PriorityQueue<Node>(new Compare());
+        PriorityQueue<Node> pq = new PriorityQueue<Node>(new Compare().CompareNodes);
 
         // Create leaf nodes and add them to the priority queue
         foreach (var entry in freqMap)
@@ -230,7 +230,7 @@ public class PriorityQueue<T>
         while (childIndex > 0)
         {
             int parentIndex = (childIndex - 1) / 2;
-            if (comparer.Compare(data[childIndex], data[parentIndex]) >= 0)
+            if (comparer.CompareNodes(data[childIndex], data[parentIndex]) >= 0)
                 break;
             T tmp = data[childIndex];
             data[childIndex] = data[parentIndex];
@@ -254,9 +254,9 @@ public class PriorityQueue<T>
             if (childIndex > lastIndex)
                 break;
             int rightChildIndex = childIndex + 1;
-            if (rightChildIndex <= lastIndex && comparer.Compare(data[rightChildIndex], data[childIndex]) < 0)
+            if (rightChildIndex <= lastIndex && comparer.CompareNodes(data[rightChildIndex], data[childIndex]) < 0)
                 childIndex = rightChildIndex;
-            if (comparer.Compare(data[parentIndex], data[childIndex]) <= 0)
+            if (comparer.CompareNodes(data[parentIndex], data[childIndex]) <= 0)
                 break;
             T tmp = data[parentIndex];
             data[parentIndex] = data[childIndex];

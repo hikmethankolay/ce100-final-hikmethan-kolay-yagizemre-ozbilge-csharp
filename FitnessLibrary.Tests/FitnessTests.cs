@@ -177,5 +177,19 @@ public class FitnessTests {
 
         Assert.Equal(numIterations, otpSet.Count);
     }
+
+    [Fact]
+    public void TestLCS_Success()
+    {
+        string testString = "3-)TEXT STRING3";
+        Assert.Equal(0, Fitness.CheckLCS(testString, "test1"));
+    }
+
+    [Fact]
+    public void TestLCS_Fail()
+    {
+        string testString = "TEXT";
+        Assert.Equal(-1, Fitness.CheckLCS(testString, "test1"));
+    }
 }
 }

@@ -2,6 +2,11 @@
 @setlocal enableextensions
 @cd /d "%~dp0"
 
+rem Get the current directory path
+for %%A in ("%~dp0.") do (
+    set "currentDir=%%~fA"
+)
+
 echo Delete and Create the "release" folder and its contents
 rd /S /Q "release"
 mkdir release
@@ -37,10 +42,30 @@ cd FitnessLibrary.Tests
 call dotnet restore
 call dotnet add package coverlet.msbuild
 call dotnet build --configuration Release
+
+xcopy /E /I /Y "%currentDir%\original_test_files" "%currentDir%\FitnessLibrary.Tests\bin\Release\net7.0"
+
 call dotnet test --no-build --configuration Release --verbosity normal --collect:"XPlat Code Coverage" --results-directory:./TestResults --logger:trx
 
+cd %currentDir%\FitnessLibrary.Tests\bin\Release\net7.0
+
+del test1.bin
+del test2.bin
+del test3.bin
+del test4.bin
+del test5.bin
+del usertest.bin
+del usertest2.bin
+del usertest3.bin
+del user.bin
+del *_records.bin
+del *_test.bin
+del *_output.bin
+del *_huffman.bin
+
+cd %currentDir%
+
 echo Generate Test Report
-cd ..
 call reportgenerator "-reports:**/coverage.cobertura.xml" "-targetdir:docs/coveragereport" -reporttypes:Html
 call reportgenerator "-reports:**/coverage.cobertura.xml" "-targetdir:assets" -reporttypes:Badges
 

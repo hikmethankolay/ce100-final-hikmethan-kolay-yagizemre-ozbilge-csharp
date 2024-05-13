@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace FitnessLibrary {
-public class Fitness {
-    /// <summary>
+/// <summary>
 /// Huffman tree node class.
 /// </summary>
 public class Node
@@ -12,51 +12,50 @@ public class Node
     /// <summary>
     /// Character data stored in the node.
     /// </summary>
-    public char Data { get; set; }
+    public char Data; 
     /// <summary>
-    /// Frequency of the character.
+    /// frequency of the character.
     /// </summary>
-    public int Freq { get; set; }
+    public int freq;
     /// <summary>
     /// Left child node.
     /// </summary>
-    public Node Left { get; set; }
+    public Node Left;
     /// <summary>
     /// Right child node.
     /// </summary>
-    public Node Right { get; set; }
+    public Node Right;
 
     /// <summary>
     /// Constructs a new Node object.
     /// </summary>
-    /// <param name="data">Character stored in the node.</param>
-    /// <param name="freq">Frequency of the character.</param>
-    public Node(char data, int freq)
-    {
-        Data = data;
-        Freq = freq;
-        Left = null;
-        Right = null;
-    }
+    /// <param name="Data">Character stored in the node.</param>
+    /// <param name="freq">frequency of the character.</param>
+    public Node(char Data, int freq) 
+    { 
+        Left = Right = null; 
+        this.Data = Data; 
+        this.freq = freq;
+    } 
 }
 
 /// <summary>
-/// Comparison class for the priority queue.
+/// Compare Class for frequency map.
 /// </summary>
-public class Compare : IComparer<Node>
+public class CompareNode : IComparer<Node>
 {
-    /// <summary>
-    /// Compares two Node objects based on their frequencies.
-    /// </summary>
-    /// <param name="a">First Node object.</param>
-    /// <param name="b">Second Node object.</param>
-    /// <returns>true if frequency of 'a' is less than frequency of 'b', else false.</returns>
-    public int CompareNodes(Node a, Node b)
+    public int Compare(Node x, Node y)
     {
-        if (a.Freq == b.Freq)
-            return a.Data.CompareTo(b.Data); // If frequencies are equal, order by character
+        int freqComparison = x.freq.CompareTo(y.freq);
 
-        return a.Freq.CompareTo(b.Freq);
+        if (freqComparison == 0)
+        {
+            return string.Compare(x.Data.ToString(), y.Data.ToString(), StringComparison.OrdinalIgnoreCase);
+        }
+        else
+        {
+            return freqComparison;
+        }
     }
 }
 
@@ -65,12 +64,76 @@ public class Compare : IComparer<Node>
 /// </summary>
 public class Huffman
 {
+/// <summary>
+/// PriorityQueue for huffman tree.
+/// </summary>
+public class PriorityQueue<T>
+{
+    private List<T> data;
+    private readonly IComparer<T> comparer;
+    public int Count
+    {
+        get { return data.Count; }
+    }
+
+    public PriorityQueue(IComparer<T> comparer)
+    {
+        data = new List<T>();
+        this.comparer = comparer;
+    }
+
+    public void Enqueue(T item)
+    {
+        data.Add(item);
+        int i = data.Count - 1;
+        while (i > 0 && comparer.Compare(data[i], data[(i - 1) / 2]) < 0)
+        {
+            T tmp = data[i];
+            data[i] = data[(i - 1) / 2];
+            data[(i - 1) / 2] = tmp;
+            i = (i - 1) / 2;
+        }
+    }
+
+    public T Dequeue()
+    {
+        T ret = data[0];
+        data[0] = data[data.Count - 1];
+        data.RemoveAt(data.Count - 1);
+        int i = 0;
+        while ((2 * i + 1) < data.Count)
+        {
+            int j = 2 * i + 1;
+            if ((2 * i + 2) < data.Count && comparer.Compare(data[2 * i + 2], data[j]) < 0)
+            {
+                j = 2 * i + 2;
+            }
+
+            if (comparer.Compare(data[i], data[j]) <= 0)
+            {
+                break;
+            }
+
+            T tmp = data[i];
+            data[i] = data[j];
+            data[j] = tmp;
+            i = j;
+        }
+
+        return ret;
+    }
+
+    public T Peek()
+    {
+        return data[0];
+    }
+}
     /// <summary>
     /// Calculates frequency of characters in the input text.
     /// </summary>
     /// <param name="text">Input text.</param>
     /// <returns>Dictionary containing character frequencies.</returns>
-    public Dictionary<char, int> CalculateFrequency(string text)
+public Dictionary<char, int> Calculatefrequency(string text)
     {
         Dictionary<char, int> freqMap = new Dictionary<char, int>();
 
@@ -98,33 +161,34 @@ public class Huffman
     /// <summary>
     /// Builds the Huffman tree based on character frequencies.
     /// </summary>
-    /// <param name="freqMap">Frequency map of characters.</param>
+    /// <param name="freqMap">frequency map of characters.</param>
     /// <returns>Root of the Huffman tree.</returns>
-    public Node BuildHuffmanTree(Dictionary<char, int> freqMap)
+public Node BuildHuffmanTree(Dictionary<char, int> freqMap)
     {
-        PriorityQueue<Node> pq = new PriorityQueue<Node>(new Compare().CompareNodes);
-
-        // Create leaf nodes and add them to the priority queue
+        // Create a min heap & inserts all characters of Data[]
+        var root = new PriorityQueue<Node>(new CompareNode());
+        
         foreach (var entry in freqMap)
         {
-            pq.Enqueue(new Node(entry.Key, entry.Value));
+            root.Enqueue(new Node(entry.Key, entry.Value)); // Use Enqueue instead of Add
         }
 
-        // Merge nodes until there's only one node left in the queue
-        while (pq.Count > 1)
+        // Iterate while size of heap doesn't become 1
+        while (root.Count != 1)
         {
-            Node left = pq.Dequeue();
-            Node right = pq.Dequeue();
-            // Create a new internal node with combined frequency
-            Node newNode = new Node('$', left.Freq + right.Freq);
-            newNode.Left = left;
-            newNode.Right = right;
-            // Add the new node back to the priority queue
-            pq.Enqueue(newNode);
+            Node top = new Node('$', 0);
+
+            Node Left = root.Dequeue();
+            top.Left = Left;
+
+            Node Right = root.Dequeue();
+            top.Right = Right;
+
+            top.freq = Left.freq + Right.freq;
+            root.Enqueue(top); // Enqueue the new node
         }
 
-        // Return the root of the Huffman tree
-        return pq.Dequeue();
+        return root.Dequeue(); // Return the root of the Huffman tree
     }
 
     /// <summary>
@@ -141,11 +205,12 @@ public class Huffman
         if (root.Data != '$')
         {
             codes[root.Data] = code;
+
         }
 
-        // Traverse left and right
-        BuildCodes(root.Left, code + "0", codes);
-        BuildCodes(root.Right, code + "1", codes);
+        // Traverse Left and Right
+        BuildCodes(root.Left, code + "1", codes);
+        BuildCodes(root.Right, code + "0", codes);
     }
 
     /// <summary>
@@ -154,124 +219,157 @@ public class Huffman
     /// <param name="text">Input text.</param>
     /// <param name="codes">Dictionary of character codes.</param>
     /// <returns>Encoded text.</returns>
-    public string Encode(string text, Dictionary<char, string> codes)
-    {
-        string encodedText = "";
+public string Encode(string text, Dictionary<char, string> codes)
+{
+    string encodedText = "";
 
-        foreach (char ch in text)
+    foreach (char ch in text)
+    {
+        if (ch == ' ')
         {
-            if (ch == ' ')
-            {
+            if (codes.ContainsKey('_'))
                 encodedText += codes['_'];
-            }
             else
-            {
-                encodedText += codes[ch];
-            }
+                Console.WriteLine("Character '_' is missing in the codes dictionary");
         }
-
-        return encodedText;
-    }
-
-    /// <summary>
-    /// Decodes the encoded text using Huffman codes.
-    /// </summary>
-    /// <param name="encodedText">Encoded text.</param>
-    /// <param name="root">Root of the Huffman tree.</param>
-    /// <returns>Decoded text.</returns>
-    public string Decode(string encodedText, Node root)
-    {
-        string decodedText = "";
-        Node current = root;
-
-        foreach (char bit in encodedText)
+        else
         {
-            if (bit == '0')
-            {
-                current = current.Left;
-            }
+            if (codes.ContainsKey(ch))
+                encodedText += codes[ch];
             else
-            {
-                current = current.Right;
-            }
-
-            if (current.Left == null && current.Right == null)
-            {
-                decodedText += current.Data;
-                current = root; // Reset current to root for next character
-            }
+                Console.WriteLine("Character '" + ch + "' is missing in the codes dictionary");
         }
-
-        return decodedText;
     }
+
+    return encodedText;
 }
 
 /// <summary>
-/// Priority queue implementation.
+/// Decodes the encoded text using Huffman codes.
 /// </summary>
-/// <typeparam name="T">Type of elements in the queue.</typeparam>
-public class PriorityQueue<T>
-{
-    private List<T> data;
-    private IComparer<T> comparer;
+/// <param name="encodedText">Encoded text.</param>
+/// <param name="root">Root of the Huffman tree.</param>
+/// <returns>Decoded text.</returns>
+public string Decode(string encodedText, Node root) {
 
-    public int Count { get { return data.Count; } }
+  string decodedText = "";
+  Node current = root;
 
-    public PriorityQueue(IComparer<T> comparer)
-    {
-        this.data = new List<T>();
-        this.comparer = comparer;
+  foreach (char bit in encodedText) {
+    if (bit == '0') {
+      current = current.Right;
+    } else {
+      current = current.Left;
     }
 
-    public void Enqueue(T item)
-    {
-        data.Add(item);
-        int childIndex = data.Count - 1;
-        while (childIndex > 0)
-        {
-            int parentIndex = (childIndex - 1) / 2;
-            if (comparer.CompareNodes(data[childIndex], data[parentIndex]) >= 0)
-                break;
-            T tmp = data[childIndex];
-            data[childIndex] = data[parentIndex];
-            data[parentIndex] = tmp;
-            childIndex = parentIndex;
-        }
+    if (current.Left == null && current.Right == null){
+      decodedText += current.Data;
+      current = root; // Reset current to root for next character
     }
-
-    public T Dequeue()
-    {
-        int lastIndex = data.Count - 1;
-        T frontItem = data[0];
-        data[0] = data[lastIndex];
-        data.RemoveAt(lastIndex);
-
-        --lastIndex;
-        int parentIndex = 0;
-        while (true)
-        {
-            int childIndex = parentIndex * 2 + 1;
-            if (childIndex > lastIndex)
-                break;
-            int rightChildIndex = childIndex + 1;
-            if (rightChildIndex <= lastIndex && comparer.CompareNodes(data[rightChildIndex], data[childIndex]) < 0)
-                childIndex = rightChildIndex;
-            if (comparer.CompareNodes(data[parentIndex], data[childIndex]) <= 0)
-                break;
-            T tmp = data[parentIndex];
-            data[parentIndex] = data[childIndex];
-            data[childIndex] = tmp;
-            parentIndex = childIndex;
-        }
-        return frontItem;
-    }
-
-    public T Peek()
-    {
-        T frontItem = data[0];
-        return frontItem;
-    }
+  }
+  return decodedText;
 }
+ public static void WriteTreeToFile(FileStream outFile, Node node)
+        {
+            if (node.Left == null && node.Right == null)
+            {
+                char data = node.Data;
+
+                if (data == '\n')
+                {
+                    outFile.WriteByte((byte)'L');
+                    outFile.WriteByte((byte)'\\');
+                    outFile.WriteByte((byte)'n');
+                }
+                else if (data == ' ')
+                {
+                    outFile.WriteByte((byte)'L');
+                    outFile.WriteByte((byte)'_');
+                }
+                else
+                {
+                    outFile.WriteByte((byte)'L');
+                    outFile.WriteByte((byte)data);
+                }
+
+                outFile.WriteByte((byte)'|');
+                outFile.Write(Encoding.ASCII.GetBytes(node.freq.ToString()), 0, Encoding.ASCII.GetBytes(node.freq.ToString()).Length);
+            }
+            else
+            {
+                outFile.WriteByte((byte)'I');
+                outFile.WriteByte((byte)node.Data);
+                outFile.WriteByte((byte)'|');
+                outFile.Write(Encoding.ASCII.GetBytes(node.freq.ToString()), 0, Encoding.ASCII.GetBytes(node.freq.ToString()).Length);
+                WriteTreeToFile(outFile, node.Left);
+                WriteTreeToFile(outFile, node.Right);
+            }
+        }
+
+        public static Node ReadTreeFromFile(StreamReader reader)
+        {
+            int marker = reader.Read();
+    
+            if (marker == -1)
+            {
+                Console.WriteLine("End of file reached!");
+                return null;
+            }
+
+            char markerChar = (char)marker;
+
+            if (markerChar == 'L')
+            {
+                int data = reader.Read();
+                char character = (char)data;
+
+                if (character == '\\' && reader.Peek() == 'n')
+                {
+                    reader.Read(); // Consume the 'n' character
+                    character = '\n'; // Replace with newline character
+                }
+
+                if (character == '_')
+                {
+                    character = ' '; // Replace with space character
+                }
+
+                reader.Read(); // Ignore the delimiter
+                string freqStr = "";
+                while (reader.Peek() != 'L' && reader.Peek() != 'I' && reader.Peek() != -1)
+                {
+                    freqStr += (char)reader.Read();
+                }
+                int freq = int.Parse(freqStr);
+                return new Node(character, freq);
+            }
+            else if (markerChar == 'I')
+            {
+                int data = reader.Read();
+                char character = (char)data;
+                reader.Read(); // Ignore the delimiter
+                string freqStr = "";
+                while (reader.Peek() != 'L' && reader.Peek() != 'I' && reader.Peek() != -1)
+                {
+                    freqStr += (char)reader.Read();
+                }
+                int freq = int.Parse(freqStr);
+                Node internalNode = new Node(character, freq);
+                internalNode.Left = ReadTreeFromFile(reader);
+                internalNode.Right = ReadTreeFromFile(reader);
+                return internalNode;
+            }
+            else
+            {
+                Console.WriteLine("Invalid marker in file!");
+                return null;
+            }
+        }
+}
+
+public class Fitness {
+    private static Huffman huffman = new Huffman();
+
 /// <summary>
 /// Finds the longest common subsequence (LCS) of two input strings.
 /// </summary>
@@ -340,17 +438,16 @@ public static int CheckLCS(string text, string fileName)
         {
             // Get the size of the file
             long fileSize = fileStream.Length;
-            // Read the entire file into a string
+            // Read the entire file into a byte array
             byte[] buffer = new byte[fileSize];
-            fileStream.Read(buffer, 0, buffer.Length);
-            string content = System.Text.Encoding.Default.GetString(buffer);
-            // Close the file
-            fileStream.Close();
+            int bytesRead = fileStream.Read(buffer, 0, buffer.Length);
+            // Convert the byte array to a string
+            string content = System.Text.Encoding.Default.GetString(buffer, 0, bytesRead);
             // Decode the content
-            using (FileStream huffmanFileStream = new FileStream(fileName + "_huffman.bin", FileMode.Open, FileAccess.Read))
+            using (StreamReader inFile = new StreamReader(fileName + "_huffman.bin"))
             {
-                Node root = ReadTreeFromFile(huffmanFileStream);
-                string decodedText = Decode(content, root);
+                Node root = Huffman.ReadTreeFromFile(inFile);
+                string decodedText = huffman.Decode(content, root);
                 // Split decoded text into lines
                 string[] lines = decodedText.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
                 // Iterate through lines
@@ -380,69 +477,63 @@ public static int CheckLCS(string text, string fileName)
     return -1;
 }
 public static int FileWrite(string fileName, string text, bool isFileNew)
+{
+    if (isFileNew)
     {
-        if (isFileNew)
-        {
-            text = "1-)" + text + "\n";
-        }
-
-        Dictionary<char, int> freqMap = CalculateFrequency(text);
-        Node root = BuildHuffmanTree(freqMap);
-        Dictionary<char, string> codes = new Dictionary<char, string>();
-        BuildCodes(root, "", codes);
-        string encodedText = Encode(text, codes);
-
-        using (FileStream outFile = new FileStream(fileName + ".bin", FileMode.Create, FileAccess.Write))
-        {
-            foreach (char i in encodedText)
-            {
-                outFile.WriteByte((byte)i);
-            }
-        }
-
-        using (FileStream outFileHuffman = new FileStream(fileName + "_huffman.bin", FileMode.Create, FileAccess.Write))
-        {
-            WriteTreeToFile(outFileHuffman, root);
-        }
-
-        return 0;
+        text = "1-)" + text + "\n";
     }
 
-    public static string FileRead(string fileName, bool printToConsole)
+    Dictionary<char, int> freqMap = huffman.Calculatefrequency(text);
+    Node root = huffman.BuildHuffmanTree(freqMap);
+    Dictionary<char, string> codes = new Dictionary<char, string>();
+    huffman.BuildCodes(root, "", codes);
+    string encodedText = huffman.Encode(text, codes);
+
+    // Write encoded text directly to the file
+    File.WriteAllText(fileName + ".bin", encodedText);
+
+    // Write Huffman tree to another file if needed
+    using (FileStream outFileHuffman = new FileStream(fileName + "_huffman.bin", FileMode.Create, FileAccess.Write))
     {
-        try
+        Huffman.WriteTreeToFile(outFileHuffman, root);
+    }
+
+    return 0;
+}
+
+public static string FileRead(string fileName, bool printToConsole)
+{   
+    Huffman huffman = new Huffman();
+    try
+    {
+        // Read encoded text directly from the file
+        string encodedText = File.ReadAllText(fileName + ".bin");
+
+        // Read Huffman tree from another file if needed
+        using (StreamReader inFile = new StreamReader(fileName + "_huffman.bin"))
         {
-            using (FileStream myFile = new FileStream(fileName + ".bin", FileMode.Open, FileAccess.Read))
+            Node root = Huffman.ReadTreeFromFile(inFile);
+            string decodedText = huffman.Decode(encodedText, root);
+
+            if (printToConsole)
             {
-                byte[] buffer = new byte[myFile.Length];
-                myFile.Read(buffer, 0, buffer.Length);
-                string content = System.Text.Encoding.Default.GetString(buffer);
-
-                using (FileStream inFile = new FileStream(fileName + "_huffman.bin", FileMode.Open, FileAccess.Read))
-                {
-                    Node root = ReadTreeFromFile(inFile);
-                    string decodedText = Decode(content, root);
-
-                    if (printToConsole)
-                    {
-                        Console.WriteLine(decodedText);
-                    }
-
-                    return decodedText;
-                }
+                Console.WriteLine(decodedText);
             }
-        }
-        catch (FileNotFoundException)
-        {
-            Console.WriteLine("File operation failed, There is no record");
-            return "-1";
-        }
-        catch (IOException)
-        {
-            Console.WriteLine("File operation failed, There is no record");
-            return "-1";
+
+            return decodedText;
         }
     }
+    catch (FileNotFoundException)
+    {
+        Console.WriteLine("File operation failed, There is no record");
+        return "-1";
+    }
+    catch (IOException)
+    {
+        Console.WriteLine("File operation failed, There is no record");
+        return "-1";
+    }
+}
 
     public static string FileReadForTest(string fileName)
     {
@@ -477,7 +568,7 @@ public static int FileWrite(string fileName, string text, bool isFileNew)
 
     public static int FileAppend(string fileName, string text)
     {
-        char mode = 'N';
+        bool mode = false;
         string fileContent = FileRead(fileName, mode);
 
         if (fileContent == "-1")
@@ -511,7 +602,7 @@ public static int FileWrite(string fileName, string text, bool isFileNew)
 
     public static int FileEdit(string fileName, int lineNumberToEdit, string newLine)
     {
-        char mode = 'N';
+        bool mode = false;
         string fileContent = FileRead(fileName, mode);
 
         if (fileContent == "-1")
@@ -521,7 +612,13 @@ public static int FileWrite(string fileName, string text, bool isFileNew)
 
         string[] lines = fileContent.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
         int lineCount = lines.Length; // A variable for an if statement to check if the line that the user wants to edit exists
-
+        for (int i = 0; i < lineCount; i++)
+        {
+            if (!lines[i].EndsWith("\n"))
+            {
+                lines[i] += "\n";
+            }
+        }
         if (lineNumberToEdit > 0 && lineNumberToEdit <= lineCount)
         {
             lines[lineNumberToEdit - 1] = lineNumberToEdit + "-)" + newLine + "\n"; // Changes a member of Lines array to a new line with its line number
@@ -540,7 +637,7 @@ public static int FileWrite(string fileName, string text, bool isFileNew)
 
     public static int FileLineDelete(string fileName, int lineNumberToDelete)
     {
-        char mode = 'N';
+        bool mode = false;
         string fileContent = FileRead(fileName, mode);
 
         if (fileContent == "-1")
@@ -550,7 +647,13 @@ public static int FileWrite(string fileName, string text, bool isFileNew)
 
         string[] lines = fileContent.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
         int lineCount = lines.Length; // A variable for an if statement to check if the line that the user wants to edit exists
-
+        for (int i = 0; i < lineCount; i++)
+        {
+            if (!lines[i].EndsWith("\n"))
+            {
+                lines[i] += "\n";
+            }
+        }
         if (lineNumberToDelete > 0 && lineNumberToDelete <= lineCount)
         {
             // Shift elements to "erase" the line at lineNumberToDelete
@@ -583,7 +686,7 @@ public static int FileWrite(string fileName, string text, bool isFileNew)
             newLines.Add(line);
         }
 
-        string newFileContent = string.Join("\n", newLines);
+        string newFileContent = string.Join("", newLines);
         FileWrite(fileName, newFileContent, false);
         Console.WriteLine("\nData successfully deleted");
         return 0;

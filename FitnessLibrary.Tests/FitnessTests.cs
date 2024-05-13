@@ -134,5 +134,20 @@ public class FitnessTests {
     {
         Assert.Equal(-1, Fitness.UserLogin("username", "password", "usertestttt"));
     }
+    [Fact]
+    public void TestSHA1()
+    {   SHA1 sha1 = new SHA1();
+        string testString = "TEST STRING";
+        string testString2 = "TEST STRING";
+        Assert.Equal(sha1.CalculateSHA1(testString), sha1.CalculateSHA1(testString2));
+    }
+
+    [Fact]
+    public void TestSHA1Fail()
+    {   SHA1 sha1 = new SHA1();
+        string testString = "TEST STRING";
+        string testString2 = "test string";
+        Assert.NotEqual(sha1.CalculateSHA1(testString), sha1.CalculateSHA1(testString2));
+    }
 }
 }

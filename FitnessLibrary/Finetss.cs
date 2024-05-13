@@ -367,8 +367,127 @@ public string Decode(string encodedText, Node root) {
         }
 }
 
+public class SHA1
+{
+    public static string CalculateSHA1(string input)
+    {
+        // Convert input string to bytes
+        byte[] data = Encoding.UTF8.GetBytes(input);
+
+        // Initialize variables
+        uint h0 = 0x67452301;
+        uint h1 = 0xEFCDAB89;
+        uint h2 = 0x98BADCFE;
+        uint h3 = 0x10325476;
+        uint h4 = 0xC3D2E1F0;
+
+        // Pre-processing: append padding bits and length
+        long originalLength = data.Length * 8;
+        int paddingLength = 64 - ((data.Length + 8) % 64); // Adjust padding calculation
+        if (paddingLength == 0)
+            paddingLength = 64;
+
+        byte[] padding = new byte[paddingLength];
+        padding[0] = 0x80;
+
+        // Append a single '1' bit
+        Array.Resize(ref data, data.Length + paddingLength);
+        Array.Copy(padding, 0, data, data.Length - paddingLength, paddingLength);
+
+        // Append original length in bits as a 64-bit big-endian integer
+        byte[] lengthBytes = BitConverter.GetBytes(originalLength);
+        Array.Resize(ref data, data.Length + 8);
+        Array.Copy(lengthBytes, 0, data, data.Length - 8, 8);
+
+        // Process the message in successive 512-bit chunks
+        for (int i = 0; i < data.Length; i += 64)
+        {
+            uint[] w = new uint[80];
+
+            // Break chunk into sixteen 32-bit big-endian words w[i]
+            for (int j = 0; j < 16; j++)
+            {
+                w[j] = (uint)((data[i + j * 4] << 24) |
+                               (data[i + j * 4 + 1] << 16) |
+                               (data[i + j * 4 + 2] << 8) |
+                               (data[i + j * 4 + 3]));
+            }
+
+            // Extend the sixteen 32-bit words into eighty 32-bit words
+            for (int j = 16; j < 80; j++)
+            {
+                w[j] = (w[j - 3] ^ w[j - 8] ^ w[j - 14] ^ w[j - 16]);
+                w[j] = (w[j] << 1) | (w[j] >> 31); // Left rotate by 1 bit
+            }
+
+            // Initialize hash value for this chunk
+            uint a = h0;
+            uint b = h1;
+            uint c = h2;
+            uint d = h3;
+            uint e = h4;
+
+            // Main loop
+            for (int j = 0; j < 80; j++)
+            {
+                uint f, k;
+                if (j < 20)
+                {
+                    f = (b & c) | ((~b) & d);
+                    k = 0x5A827999;
+                }
+                else if (j < 40)
+                {
+                    f = b ^ c ^ d;
+                    k = 0x6ED9EBA1;
+                }
+                else if (j < 60)
+                {
+                    f = (b & c) | (b & d) | (c & d);
+                    k = 0x8F1BBCDC;
+                }
+                else
+                {
+                    f = b ^ c ^ d;
+                    k = 0xCA62C1D6;
+                }
+
+                uint temp = ((a << 5) | (a >> 27)) + f + e + k + w[j];
+                e = d;
+                d = c;
+                c = ((b << 30) | (b >> 2));
+                b = a;
+                a = temp;
+            }
+
+            // Add this chunk's hash to result so far
+            h0 += a;
+            h1 += b;
+            h2 += c;
+            h3 += d;
+            h4 += e;
+        }
+
+        // Produce the final hash value (big-endian)
+        byte[] hashBytes = new byte[20];
+        Array.Copy(BitConverter.GetBytes(h0), 0, hashBytes, 0, 4);
+        Array.Copy(BitConverter.GetBytes(h1), 0, hashBytes, 4, 4);
+        Array.Copy(BitConverter.GetBytes(h2), 0, hashBytes, 8, 4);
+        Array.Copy(BitConverter.GetBytes(h3), 0, hashBytes, 12, 4);
+        Array.Copy(BitConverter.GetBytes(h4), 0, hashBytes, 16, 4);
+
+        // Convert hash bytes to string
+        string hashString = BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
+
+        return hashString;
+    }
+}
+
 public class Fitness {
-    private static Huffman huffman = new Huffman();
+
+private static Huffman huffman = new Huffman();
+
+private static SHA1 sha1 = new SHA1();
 
 /// <summary>
 /// Finds the longest common subsequence (LCS) of two input strings.

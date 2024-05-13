@@ -3,9 +3,6 @@ using FitnessLibrary;
 namespace FitnessLibrary.Tests {
 public class FitnessTests {
 
-    int fail = -1;
-    int success = 0;
-
     [Fact]
     public void TestFileRead()
     {
@@ -58,33 +55,84 @@ public class FitnessTests {
     public void TestFileAppendFail()
     {
         string appendString = "TEXT STRING5";
-        Assert.Equal(fail, Fitness.FileAppend("test2f", appendString));
+        Assert.Equal(-1, Fitness.FileAppend("test2f", appendString));
     }
 
     [Fact]
     public void TestFileEditFail()
     {
         string editString = "TEXT STRING EDIT";
-        Assert.Equal(fail, Fitness.FileEdit("test3f", 3, editString));
+        Assert.Equal(-1, Fitness.FileEdit("test3f", 3, editString));
     }
 
     [Fact]
     public void TestFileEditFail_2()
     {
         string editString = "TEXT STRING EDIT";
-        Assert.Equal(fail, Fitness.FileEdit("test3", 100, editString));
+        Assert.Equal(-1, Fitness.FileEdit("test3", 100, editString));
     }
 
     [Fact]
     public void TestFileDeleteFail()
     {
-        Assert.Equal(fail, Fitness.FileLineDelete("test4f", 2));
+        Assert.Equal(-1, Fitness.FileLineDelete("test4f", 2));
     }
 
     [Fact]
     public void TestFileDeleteFail_2()
     {
-        Assert.Equal(fail, Fitness.FileLineDelete("test4", 100));
+        Assert.Equal(-1, Fitness.FileLineDelete("test4", 100));
+    }
+    [Fact]
+    public void TestUserRegister()
+    {
+        string testString = "cf8a3324347724049bc4d7578f75e1dc4b98f3c7/adcdba463c0cb1198197c0f8571679e7b317f17f/a03cd5ac546368a972e3bd8a2b1964372b59f5ed";
+        Fitness.UserRegister("username", "password", "recoverykey", "usertest");
+        Assert.Equal(testString, Fitness.FileRead("usertest", false));
+    }
+
+    [Fact]
+    public void TestUserChangePassword()
+    {
+        string testString = "cf8a3324347724049bc4d7578f75e1dc4b98f3c7/644a4e90da2b3b76ebae3b60bdee501940257e26/a03cd5ac546368a972e3bd8a2b1964372b59f5ed";
+        Fitness.UserChangePassword("recoverykey", "newpassword", "usertest2");
+        Assert.Equal(testString, Fitness.FileRead("usertest2", false));
+    }
+
+    [Fact]
+    public void TestUserChangePasswordFail()
+    {
+       Assert.Equal(-1 , Fitness.UserChangePassword("recoverykey", "newpassword", "usertestttt"));
+    }
+
+    [Fact]
+    public void TestUserChangePasswordFail_2()
+    {
+        Assert.Equal(-1 , Fitness.UserChangePassword("recoverykeyaa", "newpassword", "usertest2"));
+    }
+
+    [Fact]
+    public void TestUserLogin()
+    {
+        Assert.Equal(0, Fitness.UserLogin("username", "password", "usertest3"));
+    }
+
+    [Fact]
+    public void TestUserLoginFail()
+    {
+        Assert.Equal(-1, Fitness.UserLogin("username", "passwordaa", "usertest3"));
+    }
+
+    [Fact]
+    public void TestUserLoginFail_2()
+    {
+        Assert.Equal(-1, Fitness.UserLogin("usernameaa", "password", "usertest3"));
+    }
+
+    [Fact]
+    public void TestUserLoginFail_3()
+    {
+        Assert.Equal(-1, Fitness.UserLogin("username", "password", "usertestttt"));
     }
 }
 }

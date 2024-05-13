@@ -369,7 +369,7 @@ public string Decode(string encodedText, Node root) {
 
 public class SHA1
 {
-    public static string CalculateSHA1(string input)
+    public string CalculateSHA1(string input)
     {
         // Convert input string to bytes
         byte[] data = Encoding.UTF8.GetBytes(input);
@@ -810,5 +810,79 @@ public static string FileRead(string fileName, bool printToConsole)
         Console.WriteLine("\nData successfully deleted");
         return 0;
     }
+public static int UserRegister(string newUsername, string newPassword, string newRecoveryKey, string userFile)
+    {
+        newUsername = sha1.CalculateSHA1(newUsername);
+        newPassword = sha1.CalculateSHA1(newPassword);
+        newRecoveryKey = sha1.CalculateSHA1(newRecoveryKey);
+        string loginInfo = $"{newUsername}/{newPassword}/{newRecoveryKey}";
+        FileWrite(userFile, loginInfo, false);
+        return 0;
+    }
+    
+public static int UserLogin(string username, string password, string userFile)
+    {
+        bool mode = false;
+        string fileContent = FileRead(userFile, mode);
+        if (fileContent == "-1")
+        {
+            return -1;
+        }
+
+        string[] parts = fileContent.Split('/');
+        if (parts.Length < 3)
+        {
+            return -1;
+        }
+
+        string usernameRead = parts[0];
+        string passwordRead = parts[1];
+
+        if (sha1.CalculateSHA1(username) == usernameRead && sha1.CalculateSHA1(password) == passwordRead)
+        {
+            Console.WriteLine("\nLogin Successful");
+            return 0;
+        }
+        else
+        {
+            Console.WriteLine("\nWrong username or password");
+            return -1;
+        }
+    }
+
+    public static int UserChangePassword(string recoveryKey, string newPassword, string userFile)
+    {
+        bool mode = false;
+        string fileContent = FileRead(userFile, mode);
+        if (fileContent == "-1")
+        {
+            Console.WriteLine("\nThere is no user info. Please register first.");
+            return -1;
+        }
+
+        string[] parts = fileContent.Split('/');
+        if (parts.Length < 3)
+        {
+            return -1;
+        }
+
+        string usernameRead = parts[0];
+        string recoveryKeyRead = parts[2];
+
+        if (sha1.CalculateSHA1(recoveryKey) == recoveryKeyRead)
+        {
+            Console.WriteLine("\nRecovery Key Approved");
+            string newLoginInfo = $"{usernameRead}/{sha1.CalculateSHA1(newPassword)}/{recoveryKeyRead}";
+            FileWrite(userFile, newLoginInfo, false);
+            Console.WriteLine("\nPassword changed successfully");
+            return 0;
+        }
+        else
+        {
+            Console.WriteLine("\nWrong Recovery Key");
+            return -1;
+        }
+    }
+
 }
 }

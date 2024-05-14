@@ -1,8 +1,88 @@
-# Visual Studio .NET Core Project Template
+# Fitness Management System App
 
-## Releases
+**I. Introduction**
 
-- [![GitHub release badge](https://badgen.net/github/release/ucoruh/vs-net-core-template)](https://github.com/ucoruh/vs-net-core-template/releases/latest)
+Fitness Management system is a project that uses C with  CMake and C# with .NET for
+cross-platform support and Doxygen to document code and unit tests. It is a
+console app that uses keyboard inputs to navigate.
+
+**II. System
+Architecture**  
+Whole management system uses standard C and C# file input/output library with
+file operation functions we created for this project, Which is:
+
+·       file_read() – Reads data
+from file
+
+·       file_write() – Deletes all
+data and writes wanted data to file
+
+·       file_edit() – changes
+specified record line
+
+·       file_line_delete() –
+Deletes a specified record line
+
+·       file_append() – Adds a
+record at the end of file
+
+**III. Functionalities**
+
+In menu, user can see,
+register, update, delete a record he wants. We also have a search and sort
+feature. We can record these types of data’s:
+
+**a. Member Management:**
+
+·       MemberID
+
+·       Full Name
+
+·       Birth Date
+
+·       Phone Number
+
+·       First Registration Date
+
+**b. Subscription Management:** 
+
+·        MemberID
+
+·       Starting date
+
+·       Finishing Date
+
+·       Subscription Tier
+
+**c. Class Management:**
+
+·       Tutor Name
+
+·       Date
+
+·       Starting hour
+
+·       Finishing Hour
+
+·       Student list
+
+**d. Payment Management:**
+
+·        MemberID
+
+·        Paid amount
+
+·        Payment Date
+
+·        Next Payment date
+
+We also have an LCS system that warns user when inputting
+a very similar record, OTP system that user have to enter a one time password
+when logging in and a Huffman coding Algorithm that compresses files.  
+**IV. Testing and Validation**
+
+We tested and documented whole system with gtest, Ctest
+and Xunit It has %95 coverage test and %100 success at unit test results
 
 ## Platforms
 
@@ -262,7 +342,6 @@ To install coverxygen you need python and pip
 @cd /d "%~dp0"
 echo Installing converxygen doxygen XML parser
 pip install coverxygen
-
 ```
 
 #### LCOV Setup
@@ -277,8 +356,6 @@ echo Installing Report Generator...
 choco install lcov -y
 echo lcov and genhtml located on C:\ProgramData\chocolatey\lib\lcov\tools\bin\
 pause
-
-
 ```
 
 #### ReportGenerator Setup

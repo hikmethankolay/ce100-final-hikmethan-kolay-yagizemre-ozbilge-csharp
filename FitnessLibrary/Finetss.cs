@@ -6,6 +6,93 @@ using System.Linq;
 
 namespace FitnessLibrary {
 /// <summary>
+/// Struct for login menu.
+/// </summary>
+struct LoginMenuVariables {
+    /// <summary>
+    /// A variable to control app's running state.
+    /// </summary>
+    public bool run;
+    /// <summary>
+    /// A variable for menu navigation.
+    /// </summary>
+    public int loginMenuLogin;
+    /// <summary>
+    /// A variable for menu navigation.
+    /// </summary>
+    public int loginMenuRegister;
+    /// <summary>
+    /// A variable for menu navigation.
+    /// </summary>
+    public int loginMenuPasswordReset;
+    /// <summary>
+    /// A variable for menu navigation.
+    /// </summary>
+    public int loginMenuGuest;
+    /// <summary>
+    /// A variable for menu navigation.
+    /// </summary>
+    public int loginMenuExit;
+};
+
+/// <summary>
+/// Struct for main menu.
+/// </summary>
+struct MainMenuVariables {
+    /// <summary>
+    /// A variable to control app's running state.
+    /// </summary>
+    public bool loggedIn;
+    /// <summary>
+    /// A variable for menu navigation.
+    /// </summary>
+    public int mainMenuMember;
+    /// <summary>
+    /// A variable for menu navigation.
+    /// </summary>
+    public int mainMenuSubs;
+    /// <summary>
+    /// A variable for menu navigation.
+    /// </summary>
+    public int mainMenuClass;
+    /// <summary>
+    /// A variable for menu navigation.
+    /// </summary>
+    public int mainMenuPayment;
+    /// <summary>
+    /// A variable for menu navigation.
+    /// </summary>
+    public int mainMenuLogOut;
+};
+
+/// <summary>
+/// Struct for sub menus.
+/// </summary>
+struct SubMenuVariables {
+    /// <summary>
+    /// A variable for menu navigation.
+    /// </summary>
+    public int subMenuShow;
+    /// <summary>
+    /// A variable for menu navigation.
+    /// </summary>
+    public int subMenuAdd;
+    /// <summary>
+    /// A variable for menu navigation.
+    /// </summary>
+    public int subMenuEdit;
+    /// <summary>
+    /// A variable for menu navigation.
+    /// </summary>
+    public int subMenuDelete;
+    /// <summary>
+    /// A variable for menu navigation.
+    /// </summary>
+    public int subMenuReturn;
+};
+
+
+/// <summary>
 /// Huffman tree node class.
 /// </summary>
 public class Node
@@ -928,5 +1015,454 @@ public static int UserLogin(string username, string password, string userFile)
         }
     }
 
+    /// <summary>
+    /// Main entry point of app.
+    /// </summary>
+    public void mainApp()
+    {
+        LoginMenuVariables loginMenuChoice = new LoginMenuVariables();
+
+        while (loginMenuChoice.run)
+        {
+            Console.Write("\n--------Login Menu--------\n" +
+                          "1-)Login\n" +
+                          "2-)Register\n" +
+                          "3-)Change Password\n" +
+                          "4-)Login as a Guest\n" +
+                          "5-)Exit\n" +
+                          "Please enter a choice:");
+            int choiceLoginMenu;
+            if (!int.TryParse(Console.ReadLine(), out choiceLoginMenu))
+            {
+                Console.WriteLine("Invalid input.");
+                continue;
+            }
+
+            if (choiceLoginMenu == loginMenuChoice.loginMenuLogin)
+            {
+                LoginMenu(false);
+            }
+            else if (choiceLoginMenu == loginMenuChoice.loginMenuRegister)
+            {
+                RegisterMenu();
+            }
+            else if (choiceLoginMenu == loginMenuChoice.loginMenuPasswordReset)
+            {
+                ChangePasswordMenu();
+            }
+            else if (choiceLoginMenu == loginMenuChoice.loginMenuGuest)
+            {
+                MainMenu(true);
+            }
+            else if (choiceLoginMenu == loginMenuChoice.loginMenuExit)
+            {
+                loginMenuChoice.run = false;
+            }
+            else
+            {
+                Console.WriteLine("Please input a correct choice.");
+            }
+        }
+    }
+
+    /// <summary>
+    /// Login menu.
+    /// </summary>
+    /// <param name="isUnitTesting">A bool to check if it is unit testing.</param>
+    /// <returns>0.</returns>
+    static int LoginMenu(bool isUnitTesting)
+    {
+        string userName;
+        string password;
+        string userFile = "user";
+        Console.Write("\nPlease enter your username:");
+        userName = Console.ReadLine();
+        Console.Write("\nPlease enter your password:");
+        password = Console.ReadLine();
+
+        if (UserLogin(userName, password, userFile) == 0)
+        {
+            string secretKey = GenerateSecretKey();
+            string otp = GenerateOTP(secretKey, 6);
+            string userInputOtp;
+            Console.Write("\nPlease enter single use code that we send you:");
+
+            if (isUnitTesting)
+            {
+                userInputOtp = otp;
+            }
+            else
+            {
+                Console.Write($"\n{otp} is the code, this is just the simulation of scenario:");
+                userInputOtp = Console.ReadLine();
+            }
+
+            if (userInputOtp == otp)
+            {
+                MainMenu(false);
+            }
+        }
+
+        return 0;
+    }
+
+    /// <summary>
+    /// Register menu.
+    /// </summary>
+    /// <returns>0.</returns>
+    static int RegisterMenu()
+    {
+        string userName;
+        string password;
+        string recoveryKey;
+        string userFile = "user";
+        string warning;
+        Console.Write("\nPlease enter your new username:");
+        userName = Console.ReadLine();
+        Console.Write("\nPlease enter your new password:");
+        password = Console.ReadLine();
+        Console.Write("\nPlease enter your new recovery key:");
+        recoveryKey = Console.ReadLine();
+        Console.Write("\n------------WARNING------------" +
+                      "\nThis process will delete all previous records, do you still wish to proceed?[Y/n]:");
+        warning = Console.ReadLine();
+
+        if (warning == "Y")
+        {
+            UserRegister(userName, password, recoveryKey, userFile);
+        }
+        else
+        {
+            Console.WriteLine("\nProcess terminated.");
+        }
+
+        return 0;
+    }
+
+    /// <summary>
+    /// Change password menu.
+    /// </summary>
+    /// <returns>0.</returns>
+    static int ChangePasswordMenu()
+    {
+        string password;
+        string recoveryKey;
+        string userFile = "user";
+        Console.Write("\nPlease enter your recovery key:");
+        recoveryKey = Console.ReadLine();
+        Console.Write("\nPlease enter your new password:");
+        password = Console.ReadLine();
+        UserChangePassword(recoveryKey, password, userFile);
+        return 0;
+    }
+
+    /// <summary>
+    /// Main menu.
+    /// </summary>
+    /// <param name="isGuestMode">A bool to check if user entered with guest mode.</param>
+    /// <returns>0.</returns>
+    static int MainMenu(bool isGuestMode)
+    {
+        MainMenuVariables MainMenuChoice = new MainMenuVariables();
+        while (true)
+        {
+            Console.Write("\n--------Main Menu--------" +
+                          "\n1-)Member Management" +
+                          "\n2-)Subscription Tracking" +
+                          "\n3-)Class Management" +
+                          "\n4-)Payment Processing" +
+                          "\n5-)Log out" +
+                          "\nPlease enter a choice:");
+            int choiceMainMenu;
+            if (!int.TryParse(Console.ReadLine(), out choiceMainMenu))
+            {
+                Console.WriteLine("Invalid input.");
+                continue;
+            }
+
+            if (choiceMainMenu == MainMenuChoice.MainMenuMember)
+            {
+                MemberMenu(isGuestMode);
+            }
+            else if (choiceMainMenu == MainMenuChoice.MainMenuSubs)
+            {
+                SubsMenu(isGuestMode);
+            }
+            else if (choiceMainMenu == MainMenuChoice.MainMenuClass)
+            {
+                ClassMenu(isGuestMode);
+            }
+            else if (choiceMainMenu == MainMenuChoice.MainMenuPayment)
+            {
+                PaymentMenu(isGuestMode);
+            }
+            else if (choiceMainMenu == MainMenuChoice.MainMenuLogOut)
+            {
+                break;
+            }
+            else
+            {
+                Console.WriteLine("\nPlease input a correct choice.");
+            }
+        }
+
+        return 0;
+    }
+
+    /// <summary>
+    /// Member menu.
+    /// </summary>
+    /// <param name="isGuestMode">A bool to check if user entered with guest mode.</param>
+    /// <returns>0.</returns>
+    static int MemberMenu(bool isGuestMode)
+    {
+        SubMenuVariables SubMenu = new SubMenuVariables();
+        while (true)
+        {
+            Console.Write("\n--------Memberships Menu--------" +
+                          "\n1-)Show Memberships" +
+                          "\n2-)Add Membership" +
+                          "\n3-)Edit Memberships" +
+                          "\n4-)Delete Memberships" +
+                          "\n5-)Return to Main Menu" +
+                          "\nPlease enter a choice:");
+            int choiceMember;
+            if (!int.TryParse(Console.ReadLine(), out choiceMember))
+            {
+                Console.WriteLine("Invalid input.");
+                continue;
+            }
+
+            if (choiceMember == SubMenu.SubMenuShow)
+            {
+                Console.Write("\n--------------Membership Records--------------\n");
+                FileRead("member_records", 'Y');
+                continue;
+            }
+            else if (isGuestMode && (choiceMember == SubMenu.SubMenuAdd || choiceMember == SubMenu.SubMenuEdit || choiceMember == SubMenu.SubMenuDelete))
+            {
+                Console.Write("\nYou can only see records while in guest mode.");
+                continue;
+            }
+            else if (choiceMember == SubMenu.SubMenuAdd)
+            {
+                AddMemberRecord();
+                continue;
+            }
+            else if (choiceMember == SubMenu.SubMenuEdit)
+            {
+                EditMemberRecord();
+                continue;
+            }
+            else if (choiceMember == SubMenu.SubMenuDelete)
+            {
+                DeleteMemberRecord();
+                continue;
+            }
+            else if (choiceMember == SubMenu.SubMenuReturn)
+            {
+                break;
+            }
+            else
+            {
+                Console.Write("\nPlease input a correct choice.");
+                continue;
+            }
+        }
+
+        return 0;
+    }
+
+    /// <summary>
+    /// Subscriptions menu.
+    /// </summary>
+    /// <param name="isGuestMode">A bool to check if user entered with guest mode.</param>
+    /// <returns>0.</returns>
+    static int SubsMenu(bool isGuestMode)
+    {
+        SubMenuVariables SubMenu = new SubMenuVariables();
+        while (true)
+        {
+            Console.Write("\n--------Subscriptions Menu--------" +
+                          "\n1-)Show Subscriptions" +
+                          "\n2-)Add Subscription" +
+                          "\n3-)Edit Subscriptions" +
+                          "\n4-)Delete Subscriptions" +
+                          "\n5-)Return to Main Menu" +
+                          "\nPlease enter a choice:");
+            int choiceSub;
+            if (!int.TryParse(Console.ReadLine(), out choiceSub))
+            {
+                Console.WriteLine("Invalid input.");
+                continue;
+            }
+
+            if (choiceSub == SubMenu.SubMenuShow)
+            {
+                Console.Write("\n--------------Membership Records--------------\n");
+                FileRead("subscription_records", 'Y');
+                continue;
+            }
+            else if (isGuestMode && (choiceSub == SubMenu.SubMenuAdd || choiceSub == SubMenu.SubMenuEdit || choiceSub == SubMenu.SubMenuDelete))
+            {
+                Console.Write("\nYou can only see records while in guest mode.");
+                continue;
+            }
+            else if (choiceSub == SubMenu.SubMenuAdd)
+            {
+                AddSubsRecord();
+                continue;
+            }
+            else if (choiceSub == SubMenu.SubMenuEdit)
+            {
+                EditSubsRecord();
+                continue;
+            }
+            else if (choiceSub == SubMenu.SubMenuDelete)
+            {
+                DeleteSubsRecord();
+                continue;
+            }
+            else if (choiceSub == SubMenu.SubMenuReturn)
+            {
+                break;
+            }
+            else
+            {
+                Console.Write("\nPlease input a correct choice.");
+                continue;
+            }
+        }
+
+        return 0;
+    }
+
+    /// <summary>
+    /// Class menu.
+    /// </summary>
+    /// <param name="isGuestMode">A bool to check if user entered with guest mode.</param>
+    /// <returns>0.</returns>
+    static int ClassMenu(bool isGuestMode)
+    {
+        SubMenuVariables SubMenu = new SubMenuVariables();
+        while (true)
+        {
+            Console.Write("\n--------Classes Menu--------" +
+                          "\n1-)Show Classes" +
+                          "\n2-)Add Class" +
+                          "\n3-)Edit Classes" +
+                          "\n4-)Delete Classes" +
+                          "\n5-)Return to Main Menu" +
+                          "\nPlease enter a choice:");
+            int choiceClass;
+            if (!int.TryParse(Console.ReadLine(), out choiceClass))
+            {
+                Console.WriteLine("Invalid input.");
+                continue;
+            }
+
+            if (choiceClass == SubMenu.SubMenuShow)
+            {
+                Console.Write("\n--------------Class Records--------------\n");
+                FileRead("class_records", 'Y');
+                continue;
+            }
+            else if (isGuestMode && (choiceClass == SubMenu.SubMenuAdd || choiceClass == SubMenu.SubMenuEdit || choiceClass == SubMenu.SubMenuDelete))
+            {
+                Console.Write("\nYou can only see records while in guest mode.");
+                continue;
+            }
+            else if (choiceClass == SubMenu.SubMenuAdd)
+            {
+                AddClassRecord();
+                continue;
+            }
+            else if (choiceClass == SubMenu.SubMenuEdit)
+            {
+                EditClassRecord();
+                continue;
+            }
+            else if (choiceClass == SubMenu.SubMenuDelete)
+            {
+                DeleteClassRecord();
+                continue;
+            }
+            else if (choiceClass == SubMenu.SubMenuReturn)
+            {
+                break;
+            }
+            else
+            {
+                Console.Write("\nPlease input a correct choice.");
+                continue;
+            }
+        }
+
+        return 0;
+    }
+
+    /// <summary>
+    /// Payment menu.
+    /// </summary>
+    /// <param name="isGuestMode">A bool to check if user entered with guest mode.</param>
+    /// <returns>0.</returns>
+    static int PaymentMenu(bool isGuestMode)
+    {
+        SubMenuVariables SubMenu = new SubMenuVariables();
+        while (true)
+        {
+            Console.Write("\n--------Payments Menu--------" +
+                          "\n1-)Show Payments" +
+                          "\n2-)Add Payment" +
+                          "\n3-)Edit Payments" +
+                          "\n4-)Delete Payments" +
+                          "\n7-)Return to Main Menu" +
+                          "\nPlease enter a choice:");
+            int choicePayment;
+            if (!int.TryParse(Console.ReadLine(), out choicePayment))
+            {
+                Console.WriteLine("Invalid input.");
+                continue;
+            }
+
+            if (choicePayment == SubMenu.SubMenuShow)
+            {
+                Console.Write("\n--------------Payment Records--------------\n");
+                FileRead("payment_records", 'Y');
+                continue;
+            }
+            else if (isGuestMode && (choicePayment == SubMenu.SubMenuAdd || choicePayment == SubMenu.SubMenuEdit || choicePayment == SubMenu.SubMenuDelete))
+            {
+                Console.Write("\nYou can only see records while in guest mode.");
+                continue;
+            }
+            else if (choicePayment == SubMenu.SubMenuAdd)
+            {
+                AddPaymentRecord();
+                continue;
+            }
+            else if (choicePayment == SubMenu.SubMenuEdit)
+            {
+                EditPaymentRecord();
+                continue;
+            }
+            else if (choicePayment == SubMenu.SubMenuDelete)
+            {
+                DeletePaymentRecord();
+                continue;
+            }
+            else if (choicePayment == SubMenu.SubMenuReturn)
+            {
+                break;
+            }
+            else
+            {
+                Console.Write("\nPlease input a correct choice.");
+                continue;
+            }
+        }
+
+        return 0;
+    }
 }
 }

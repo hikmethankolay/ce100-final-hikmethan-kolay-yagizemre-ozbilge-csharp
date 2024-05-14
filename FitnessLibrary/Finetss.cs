@@ -6,6 +6,117 @@ using System.Linq;
 
 namespace FitnessLibrary {
 /// <summary>
+/// Represents a member record.
+/// </summary>
+struct MemberRecord {
+    /// <summary>
+    /// Member ID.
+    /// </summary>
+    public string memberID;
+
+    /// <summary>
+    /// Full name of the member.
+    /// </summary>
+    public string fullName;
+
+    /// <summary>
+    /// Birth date of the member.
+    /// </summary>
+    public string birthDate;
+
+    /// <summary>
+    /// Phone number of the member.
+    /// </summary>
+    public string phoneNumber;
+
+    /// <summary>
+    /// Date of first registration.
+    /// </summary>
+    public string firstRegistrationDate;
+}
+
+/// <summary>
+/// Represents a subscription record.
+/// </summary>
+struct SubscriptionRecord {
+    /// <summary>
+    /// Member ID associated with the subscription.
+    /// </summary>
+    public string memberID;
+
+    /// <summary>
+    /// Starting date of the subscription.
+    /// </summary>
+    public string startingDate;
+
+    /// <summary>
+    /// Finishing date of the subscription.
+    /// </summary>
+    public string finishingDate;
+
+    /// <summary>
+    /// Tier of the subscription.
+    /// </summary>
+    public string subscriptionTier;
+}
+
+/// <summary>
+/// Represents a class record.
+/// </summary>
+struct ClassRecord {
+    /// <summary>
+    /// Tutor of the class.
+    /// </summary>
+    public string tutor;
+
+    /// <summary>
+    /// Date of the class.
+    /// </summary>
+    public string date;
+
+    /// <summary>
+    /// Starting hour of the class.
+    /// </summary>
+    public string startingHour;
+
+    /// <summary>
+    /// Finishing hour of the class.
+    /// </summary>
+    public string finishingHour;
+
+    /// <summary>
+    /// List of students in the class.
+    /// </summary>
+    public string studentList;
+}
+
+/// <summary>
+/// Represents a payment record.
+/// </summary>
+struct PaymentRecord {
+    /// <summary>
+    /// Member ID associated with the payment.
+    /// </summary>
+    public string memberID;
+
+    /// <summary>
+    /// Amount paid.
+    /// </summary>
+    public string paidAmount;
+
+    /// <summary>
+    /// Date of the payment.
+    /// </summary>
+    public string paymentDate;
+
+    /// <summary>
+    /// Date of the next payment.
+    /// </summary>
+    public string nextPaymentDate;
+}
+
+
+/// <summary>
 /// Struct for login menu.
 /// </summary>
 struct LoginMenuVariables {
@@ -1307,16 +1418,112 @@ public static int UserLogin(string username, string password, string userFile)
 
         return 0;
     }
-    static int AddMemberRecord(){
-         return 0;
+    static int AddMemberRecord()
+    {
+        MemberRecord member;
+        Console.Write("\nPlease enter memberID: ");
+        member.memberID = Console.ReadLine();
+        Console.Write("\nPlease enter full name: ");
+        member.fullName = Console.ReadLine();
+        Console.Write("\nPlease enter birth date: ");
+        member.birthDate = Console.ReadLine();
+        Console.Write("\nPlease enter phone number: ");
+        member.phoneNumber = Console.ReadLine();
+        Console.Write("\nPlease enter first registration date: ");
+        member.firstRegistrationDate = Console.ReadLine();
+
+        StringBuilder formattedRecord = new StringBuilder();
+        formattedRecord.Append("MemberID:").Append(member.memberID)
+                       .Append(" / Full name:").Append(member.fullName)
+                       .Append(" / Birth date:").Append(member.birthDate)
+                       .Append(" / Phone number:").Append(member.phoneNumber)
+                       .Append(" / First registration date:").Append(member.firstRegistrationDate);
+        string result = formattedRecord.ToString();
+
+        if (CheckLCS(result, "member_records") == 0)
+        {
+            Console.Write("\nThere is a very similar record, Do you wish to add new record anyway?[Y/n]: ");
+            char choice = Console.ReadKey().KeyChar;
+            if (choice != 'Y')
+            {
+                return 0;
+            }
+        }
+
+        string fileName = "member_records.bin";
+        if (!File.Exists(fileName))
+        {
+            FileWrite("member_records", result, true);
+        }
+        else
+        {
+            FileAppend("member_records", result);
+        }
+        return 0;
     }
 
-    static int EditMemberRecord(){
-         return 0;
+    /// <summary>
+    /// A function for editing a member record.
+    /// </summary>
+    /// <returns>0 on success, -1 on failure.</returns>
+    static int EditMemberRecord()
+    {
+        MemberRecord member;
+        int recordNumberToEdit;
+
+        Console.Write("\nPlease enter record number to edit: ");
+        recordNumberToEdit = int.Parse(Console.ReadLine());
+
+        Console.Write("\nPlease enter memberID: ");
+        member.memberID = int.Parse(Console.ReadLine());
+
+        Console.Write("\nPlease enter full name: ");
+        member.fullName = Console.ReadLine();
+
+        Console.Write("\nPlease enter birth date: ");
+        member.birthDate = Console.ReadLine();
+
+        Console.Write("\nPlease enter phone number: ");
+        member.phoneNumber = Console.ReadLine();
+
+        Console.Write("\nPlease enter first registration date: ");
+        member.firstRegistrationDate = Console.ReadLine();
+
+        StringBuilder formattedRecord = new StringBuilder();
+        formattedRecord.Append("MemberID:").Append(member.memberID)
+                       .Append(" / Full name:").Append(member.fullName)
+                       .Append(" / Birth date:").Append(member.birthDate)
+                       .Append(" / Phone number:").Append(member.phoneNumber)
+                       .Append(" / First registration date:").Append(member.firstRegistrationDate);
+        string result = formattedRecord.ToString();
+
+        if (FileEdit("member_records", recordNumberToEdit, result) == 0)
+        {
+            return 0;
+        }
+        else
+        {
+            return -1;
+        }
     }
 
-    static int DeleteMemberRecord(){
-         return 0;
+    /// <summary>
+    /// A function for deleting a member record.
+    /// </summary>
+    /// <returns>0.</returns>
+    static int DeleteMemberRecord()
+    {
+        Console.Write("\nPlease enter record number to delete: ");
+        int recordNumberToDelete = int.Parse(Console.ReadLine());
+
+        if (FileLineDelete("member_records", recordNumberToDelete) == 0)
+        {
+            return 0;
+        }
+        else
+        {
+            return -1;
+        }
     }
 
     /// <summary>

@@ -33,6 +33,16 @@ struct LoginMenuVariables {
     /// A variable for menu navigation.
     /// </summary>
     public int loginMenuExit;
+
+    // Constructor
+    public LoginMenuVariables() {
+        run = true;
+        loginMenuLogin = 1;
+        loginMenuRegister = 2;
+        loginMenuPasswordReset = 3;
+        loginMenuGuest = 4;
+        loginMenuExit = 5;
+    }
 };
 
 /// <summary>
@@ -46,23 +56,33 @@ struct MainMenuVariables {
     /// <summary>
     /// A variable for menu navigation.
     /// </summary>
-    public int mainMenuMember;
+    public int MainMenuMember;
     /// <summary>
     /// A variable for menu navigation.
     /// </summary>
-    public int mainMenuSubs;
+    public int MainMenuSubs;
     /// <summary>
     /// A variable for menu navigation.
     /// </summary>
-    public int mainMenuClass;
+    public int MainMenuClass;
     /// <summary>
     /// A variable for menu navigation.
     /// </summary>
-    public int mainMenuPayment;
+    public int MainMenuPayment;
     /// <summary>
     /// A variable for menu navigation.
     /// </summary>
-    public int mainMenuLogOut;
+    public int MainMenuLogOut;
+
+    // Constructor
+    public MainMenuVariables() {
+        loggedIn = true;
+        MainMenuMember = 1;
+        MainMenuSubs = 2;
+        MainMenuClass = 3;
+        MainMenuPayment = 4;
+        MainMenuLogOut = 5;
+    }
 };
 
 /// <summary>
@@ -72,23 +92,32 @@ struct SubMenuVariables {
     /// <summary>
     /// A variable for menu navigation.
     /// </summary>
-    public int subMenuShow;
+    public int SubMenuShow;
     /// <summary>
     /// A variable for menu navigation.
     /// </summary>
-    public int subMenuAdd;
+    public int SubMenuAdd;
     /// <summary>
     /// A variable for menu navigation.
     /// </summary>
-    public int subMenuEdit;
+    public int SubMenuEdit;
     /// <summary>
     /// A variable for menu navigation.
     /// </summary>
-    public int subMenuDelete;
+    public int SubMenuDelete;
     /// <summary>
     /// A variable for menu navigation.
     /// </summary>
-    public int subMenuReturn;
+    public int SubMenuReturn;
+
+    // Constructor
+    public SubMenuVariables() {
+        SubMenuShow = 1;
+        SubMenuAdd = 2;
+        SubMenuEdit = 3;
+        SubMenuDelete = 4;
+        SubMenuReturn = 5;
+    }
 };
 
 
@@ -1072,6 +1101,7 @@ public static int UserLogin(string username, string password, string userFile)
     /// <returns>0.</returns>
     static int LoginMenu(bool isUnitTesting)
     {
+        OTPGenerator otp = new OTPGenerator();
         string userName;
         string password;
         string userFile = "user";
@@ -1081,23 +1111,28 @@ public static int UserLogin(string username, string password, string userFile)
         password = Console.ReadLine();
 
         if (UserLogin(userName, password, userFile) == 0)
-        {
-            string secretKey = GenerateSecretKey();
-            string otp = GenerateOTP(secretKey, 6);
+        {   OTPGenerator OTP = new OTPGenerator();
+
+            string Otp;
+            string secretKey;
+            
+            secretKey = OTP.GenerateSecretKey();
+            Otp = OTP.GenerateOTP(secretKey, 6);
+
             string userInputOtp;
             Console.Write("\nPlease enter single use code that we send you:");
 
             if (isUnitTesting)
             {
-                userInputOtp = otp;
+                userInputOtp = Otp;
             }
             else
             {
-                Console.Write($"\n{otp} is the code, this is just the simulation of scenario:");
+                Console.Write($"\n{Otp} is the code, this is just the simulation of scenario:");
                 userInputOtp = Console.ReadLine();
             }
 
-            if (userInputOtp == otp)
+            if (userInputOtp == Otp)
             {
                 MainMenu(false);
             }
@@ -1236,7 +1271,7 @@ public static int UserLogin(string username, string password, string userFile)
             if (choiceMember == SubMenu.SubMenuShow)
             {
                 Console.Write("\n--------------Membership Records--------------\n");
-                FileRead("member_records", 'Y');
+                FileRead("member_records", true);
                 continue;
             }
             else if (isGuestMode && (choiceMember == SubMenu.SubMenuAdd || choiceMember == SubMenu.SubMenuEdit || choiceMember == SubMenu.SubMenuDelete))
@@ -1246,17 +1281,17 @@ public static int UserLogin(string username, string password, string userFile)
             }
             else if (choiceMember == SubMenu.SubMenuAdd)
             {
-                AddMemberRecord();
+                //AddMemberRecord();
                 continue;
             }
             else if (choiceMember == SubMenu.SubMenuEdit)
             {
-                EditMemberRecord();
+                //EditMemberRecord();
                 continue;
             }
             else if (choiceMember == SubMenu.SubMenuDelete)
             {
-                DeleteMemberRecord();
+                //DeleteMemberRecord();
                 continue;
             }
             else if (choiceMember == SubMenu.SubMenuReturn)
@@ -1300,7 +1335,7 @@ public static int UserLogin(string username, string password, string userFile)
             if (choiceSub == SubMenu.SubMenuShow)
             {
                 Console.Write("\n--------------Membership Records--------------\n");
-                FileRead("subscription_records", 'Y');
+                FileRead("subscription_records", true);
                 continue;
             }
             else if (isGuestMode && (choiceSub == SubMenu.SubMenuAdd || choiceSub == SubMenu.SubMenuEdit || choiceSub == SubMenu.SubMenuDelete))
@@ -1310,17 +1345,17 @@ public static int UserLogin(string username, string password, string userFile)
             }
             else if (choiceSub == SubMenu.SubMenuAdd)
             {
-                AddSubsRecord();
+                //AddSubsRecord();
                 continue;
             }
             else if (choiceSub == SubMenu.SubMenuEdit)
             {
-                EditSubsRecord();
+                //EditSubsRecord();
                 continue;
             }
             else if (choiceSub == SubMenu.SubMenuDelete)
             {
-                DeleteSubsRecord();
+                //DeleteSubsRecord();
                 continue;
             }
             else if (choiceSub == SubMenu.SubMenuReturn)
@@ -1364,7 +1399,7 @@ public static int UserLogin(string username, string password, string userFile)
             if (choiceClass == SubMenu.SubMenuShow)
             {
                 Console.Write("\n--------------Class Records--------------\n");
-                FileRead("class_records", 'Y');
+                FileRead("class_records", true);
                 continue;
             }
             else if (isGuestMode && (choiceClass == SubMenu.SubMenuAdd || choiceClass == SubMenu.SubMenuEdit || choiceClass == SubMenu.SubMenuDelete))
@@ -1374,17 +1409,17 @@ public static int UserLogin(string username, string password, string userFile)
             }
             else if (choiceClass == SubMenu.SubMenuAdd)
             {
-                AddClassRecord();
+                //AddClassRecord();
                 continue;
             }
             else if (choiceClass == SubMenu.SubMenuEdit)
             {
-                EditClassRecord();
+                //EditClassRecord();
                 continue;
             }
             else if (choiceClass == SubMenu.SubMenuDelete)
             {
-                DeleteClassRecord();
+                //DeleteClassRecord();
                 continue;
             }
             else if (choiceClass == SubMenu.SubMenuReturn)
@@ -1428,7 +1463,7 @@ public static int UserLogin(string username, string password, string userFile)
             if (choicePayment == SubMenu.SubMenuShow)
             {
                 Console.Write("\n--------------Payment Records--------------\n");
-                FileRead("payment_records", 'Y');
+                FileRead("payment_records", true);
                 continue;
             }
             else if (isGuestMode && (choicePayment == SubMenu.SubMenuAdd || choicePayment == SubMenu.SubMenuEdit || choicePayment == SubMenu.SubMenuDelete))
@@ -1438,17 +1473,17 @@ public static int UserLogin(string username, string password, string userFile)
             }
             else if (choicePayment == SubMenu.SubMenuAdd)
             {
-                AddPaymentRecord();
+                //AddPaymentRecord();
                 continue;
             }
             else if (choicePayment == SubMenu.SubMenuEdit)
             {
-                EditPaymentRecord();
+                //EditPaymentRecord();
                 continue;
             }
             else if (choicePayment == SubMenu.SubMenuDelete)
             {
-                DeletePaymentRecord();
+                //DeletePaymentRecord();
                 continue;
             }
             else if (choicePayment == SubMenu.SubMenuReturn)

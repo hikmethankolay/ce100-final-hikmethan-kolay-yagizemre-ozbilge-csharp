@@ -1309,15 +1309,15 @@ public static int UserLogin(string username, string password, string userFile)
     }
     static int AddMemberRecord(){
          return 0;
-    };
+    }
 
     static int EditMemberRecord(){
          return 0;
-    };
+    }
 
     static int DeleteMemberRecord(){
          return 0;
-    };
+    }
 
     /// <summary>
     /// Subscriptions menu.
@@ -1384,15 +1384,15 @@ public static int UserLogin(string username, string password, string userFile)
     }
     static int AddSubsRecord(){
          return 0;
-    };
+    }
 
     static int EditSubsRecord(){
          return 0;
-    };
+    }
 
     static int DeleteSubsRecord(){
         return 0;
-    };
+    }
     /// <summary>
     /// Class menu.
     /// </summary>
@@ -1458,15 +1458,15 @@ public static int UserLogin(string username, string password, string userFile)
     }
     static int AddClassRecord(){
          return 0;
-    };
+    }
 
     static int EditClassRecord(){
          return 0;
-    };
+    }
 
     static int DeleteClassRecord(){
         return 0;
-    };
+    }
 
     /// <summary>
     /// Payment menu.
@@ -1533,14 +1533,15 @@ public static int UserLogin(string username, string password, string userFile)
     }
     static int AddPaymentRecord(){
          return 0;
-    };
+    }
 
     static int EditPaymentRecord(){
          return 0;
-    };
+    }
 
     static int DeletePaymentRecord(){
         return 0;
-    };
+    }
+
 }
 }

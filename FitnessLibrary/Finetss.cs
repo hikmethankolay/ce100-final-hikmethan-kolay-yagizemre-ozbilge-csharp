@@ -1281,17 +1281,17 @@ public static int UserLogin(string username, string password, string userFile)
             }
             else if (choiceMember == SubMenu.SubMenuAdd)
             {
-                //AddMemberRecord();
+                AddMemberRecord();
                 continue;
             }
             else if (choiceMember == SubMenu.SubMenuEdit)
             {
-                //EditMemberRecord();
+                EditMemberRecord();
                 continue;
             }
             else if (choiceMember == SubMenu.SubMenuDelete)
             {
-                //DeleteMemberRecord();
+                DeleteMemberRecord();
                 continue;
             }
             else if (choiceMember == SubMenu.SubMenuReturn)
@@ -1307,6 +1307,17 @@ public static int UserLogin(string username, string password, string userFile)
 
         return 0;
     }
+    static int AddMemberRecord(){
+         return 0;
+    };
+
+    static int EditMemberRecord(){
+         return 0;
+    };
+
+    static int DeleteMemberRecord(){
+         return 0;
+    };
 
     /// <summary>
     /// Subscriptions menu.
@@ -1345,17 +1356,17 @@ public static int UserLogin(string username, string password, string userFile)
             }
             else if (choiceSub == SubMenu.SubMenuAdd)
             {
-                //AddSubsRecord();
+                AddSubsRecord();
                 continue;
             }
             else if (choiceSub == SubMenu.SubMenuEdit)
             {
-                //EditSubsRecord();
+                EditSubsRecord();
                 continue;
             }
             else if (choiceSub == SubMenu.SubMenuDelete)
             {
-                //DeleteSubsRecord();
+                DeleteSubsRecord();
                 continue;
             }
             else if (choiceSub == SubMenu.SubMenuReturn)
@@ -1371,7 +1382,17 @@ public static int UserLogin(string username, string password, string userFile)
 
         return 0;
     }
+    static int AddSubsRecord(){
+         return 0;
+    };
 
+    static int EditSubsRecord(){
+         return 0;
+    };
+
+    static int DeleteSubsRecord(){
+        return 0;
+    };
     /// <summary>
     /// Class menu.
     /// </summary>
@@ -1409,17 +1430,17 @@ public static int UserLogin(string username, string password, string userFile)
             }
             else if (choiceClass == SubMenu.SubMenuAdd)
             {
-                //AddClassRecord();
+                AddClassRecord();
                 continue;
             }
             else if (choiceClass == SubMenu.SubMenuEdit)
             {
-                //EditClassRecord();
+                EditClassRecord();
                 continue;
             }
             else if (choiceClass == SubMenu.SubMenuDelete)
             {
-                //DeleteClassRecord();
+                DeleteClassRecord();
                 continue;
             }
             else if (choiceClass == SubMenu.SubMenuReturn)
@@ -1435,6 +1456,17 @@ public static int UserLogin(string username, string password, string userFile)
 
         return 0;
     }
+    static int AddClassRecord(){
+         return 0;
+    };
+
+    static int EditClassRecord(){
+         return 0;
+    };
+
+    static int DeleteClassRecord(){
+        return 0;
+    };
 
     /// <summary>
     /// Payment menu.
@@ -1473,17 +1505,17 @@ public static int UserLogin(string username, string password, string userFile)
             }
             else if (choicePayment == SubMenu.SubMenuAdd)
             {
-                //AddPaymentRecord();
+                AddPaymentRecord();
                 continue;
             }
             else if (choicePayment == SubMenu.SubMenuEdit)
             {
-                //EditPaymentRecord();
+                EditPaymentRecord();
                 continue;
             }
             else if (choicePayment == SubMenu.SubMenuDelete)
             {
-                //DeletePaymentRecord();
+                DeletePaymentRecord();
                 continue;
             }
             else if (choicePayment == SubMenu.SubMenuReturn)
@@ -1499,5 +1531,16 @@ public static int UserLogin(string username, string password, string userFile)
 
         return 0;
     }
+    static int AddPaymentRecord(){
+         return 0;
+    };
+
+    static int EditPaymentRecord(){
+         return 0;
+    };
+
+    static int DeletePaymentRecord(){
+        return 0;
+    };
 }
 }

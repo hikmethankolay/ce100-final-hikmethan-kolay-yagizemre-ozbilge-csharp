@@ -303,6 +303,74 @@ public class FitnessTests {
         // Assert that the outputs are equal
         Assert.Equal(expectedOutput, actualOutput);
     }
+    /// <summary>
+    /// Tests the main app menu functionality.
+    /// </summary>
+    [Fact]
+    public void TestMainApp()
+    {
+        // Redirect stdout to a file
+        using (var outputWriter = new StreamWriter("mainapp_menu_output_test.bin"))
+        {
+            Console.SetOut(outputWriter);
 
+            // Redirect stdin from a file
+            using (var inputReader = new StreamReader("mainapp_menu_input_test.bin"))
+            {
+                Console.SetIn(inputReader);
+                Fitness fitness = new Fitness();
+                // Call the method to test
+                fitness.mainApp();
+            }
+
+            outputWriter.Flush();
+        }
+
+        // Reset stdout and stdin
+        Console.SetOut(new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = true });
+        Console.SetIn(new StreamReader(Console.OpenStandardInput()));
+
+        // Read the expected and actual output files
+        var expectedOutput = Fitness.FileReadForTest("mainapp_menu_expected_output");
+        var actualOutput = Fitness.FileReadForTest("mainapp_menu_output_test");
+
+        // Assert that the outputs are equal
+        Assert.Equal(expectedOutput, actualOutput);
+    }
+
+    /// <summary>
+    /// Tests the member menu functionality.
+    /// </summary>
+    [Fact]
+    public void TestMemberMenu()
+    {
+        // Redirect stdout to a file
+        using (var outputWriter = new StreamWriter("member_menu_output_test.bin"))
+        {
+            Console.SetOut(outputWriter);
+
+            // Redirect stdin from a file
+            using (var inputReader = new StreamReader("member_menu_input_test.bin"))
+            {
+                Console.SetIn(inputReader);
+
+                // Call the method to test
+                Fitness.MemberMenu(false);
+            }
+
+            outputWriter.Flush();
+        }
+
+        // Reset stdout and stdin
+        Console.SetOut(new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = true });
+        Console.SetIn(new StreamReader(Console.OpenStandardInput()));
+
+        // Read the expected and actual output files
+        var expectedOutput = Fitness.FileReadForTest("member_menu_expected_output");
+        var actualOutput = Fitness.FileReadForTest("member_menu_output_test");
+
+        // Assert that the outputs are equal
+        Assert.Equal(expectedOutput, actualOutput);
+    }
 }
 }

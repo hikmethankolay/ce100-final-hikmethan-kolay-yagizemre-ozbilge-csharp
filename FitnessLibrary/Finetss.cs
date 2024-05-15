@@ -1553,21 +1553,21 @@ public static int UserLogin(string username, string password, string userFile)
         Console.Write("\nPlease enter memberID: ");
         sub.memberID = Console.ReadLine();
         Console.Write("\nPlease enter starting date: ");
-        sub.StartingDate = Console.ReadLine();
+        sub.startingDate = Console.ReadLine();
         Console.Write("\nPlease enter finishing date: ");
-        sub.FinishingDate = Console.ReadLine();
+        sub.finishingDate = Console.ReadLine();
         Console.Write("\nPlease enter subscription tier: ");
-        sub.SubscriptionTier = Console.ReadLine();
+        sub.subscriptionTier = Console.ReadLine();
         
 
         StringBuilder formattedRecord = new StringBuilder();
         formattedRecord.Append("MemberID:").Append(sub.memberID)
-                       .Append(" / Starting Date:").Append(sub.StartingDate)
-                       .Append(" / Finishing Date:").Append(sub.FinishingDate)
-                       .Append(" / Subscription Tier:").Append(sub.SubscriptionTier)
+                       .Append(" / Starting Date:").Append(sub.startingDate)
+                       .Append(" / Finishing Date:").Append(sub.finishingDate)
+                       .Append(" / Subscription Tier:").Append(sub.subscriptionTier);
         string result = formattedRecord.ToString();
 
-        if (CheckLCS(result, "subcription_records") == 0)
+        if (CheckLCS(result, "subscription_records") == 0)
         {
             Console.Write("\nThere is a very similar record, Do you wish to add new record anyway?[Y/n]: ");
             char choice = Console.ReadKey().KeyChar;
@@ -1599,18 +1599,18 @@ public static int UserLogin(string username, string password, string userFile)
         Console.Write("\nPlease enter memberID: ");
         sub.memberID = Console.ReadLine();
         Console.Write("\nPlease enter starting date: ");
-        sub.StartingDate = Console.ReadLine();
+        sub.startingDate = Console.ReadLine();
         Console.Write("\nPlease enter finishing date: ");
-        sub.FinishingDate = Console.ReadLine();
+        sub.finishingDate = Console.ReadLine();
         Console.Write("\nPlease enter subscription tier: ");
-        sub.SubscriptionTier = Console.ReadLine();
+        sub.subscriptionTier = Console.ReadLine();
         
 
         StringBuilder formattedRecord = new StringBuilder();
         formattedRecord.Append("MemberID:").Append(sub.memberID)
-                       .Append(" / Starting Date:").Append(sub.StartingDate)
-                       .Append(" / Finishing Date:").Append(sub.FinishingDate)
-                       .Append(" / Subscription Tier:").Append(sub.SubscriptionTier)
+                       .Append(" / Starting Date:").Append(sub.startingDate)
+                       .Append(" / Finishing Date:").Append(sub.finishingDate)
+                       .Append(" / Subscription Tier:").Append(sub.subscriptionTier);
         string result = formattedRecord.ToString();
          if(FileEdit("subscription_records",recordNumberToEdit,result) == 0)
          {
@@ -1699,25 +1699,25 @@ public static int UserLogin(string username, string password, string userFile)
         return 0;
     }
     static int AddClassRecord(){
-        ClassRecord class;
+        ClassRecord classes;
 
         Console.Write("\nPlease enter tutor: ");
-        class.tutor = Console.ReadLine();
+        classes.tutor = Console.ReadLine();
         Console.Write("\nPlease enter date: ");
-        class.date = Console.ReadLine();
+        classes.date = Console.ReadLine();
         Console.Write("\nPlease enter starting hour: ");
-        class.StartingHour = Console.ReadLine();
+        classes.startingHour = Console.ReadLine();
         Console.Write("\nPlease enter finishing hour: ");
-        class.FinishingHour = Console.ReadLine();
+        classes.finishingHour = Console.ReadLine();
         Console.Write("\nPlease enter student list: ");
-        class.StudentList = Console.ReadLine();
+        classes.studentList = Console.ReadLine();
 
         StringBuilder formattedRecord = new StringBuilder();
-        formattedRecord.Append("Tutor:").Append(class.tutor)
-                       .Append(" / Date:").Append(class.date)
-                       .Append(" / Starting Hour:").Append(class.StartingHour)
-                       .Append(" / Finishing Hour:").Append(class.FinishingHour)
-                       .Append(" / Student List:").Append(class.tutor);
+        formattedRecord.Append("Tutor:").Append(classes.tutor)
+                       .Append(" / Date:").Append(classes.date)
+                       .Append(" / Starting Hour:").Append(classes.startingHour)
+                       .Append(" / Finishing Hour:").Append(classes.finishingHour)
+                       .Append(" / Student List:").Append(classes.tutor);
         string result = formattedRecord.ToString();
 
         
@@ -1746,7 +1746,7 @@ public static int UserLogin(string username, string password, string userFile)
 
     static int EditClassRecord(){
 
-        ClassRecord class;
+        ClassRecord classes;
 
         int recordNumberToEdit;
 
@@ -1754,22 +1754,22 @@ public static int UserLogin(string username, string password, string userFile)
         recordNumberToEdit = int.Parse(Console.ReadLine());
 
         Console.Write("\nPlease enter tutor: ");
-        class.tutor = Console.ReadLine();
+        classes.tutor = Console.ReadLine();
         Console.Write("\nPlease enter date: ");
-        class.date = Console.ReadLine();
+        classes.date = Console.ReadLine();
         Console.Write("\nPlease enter starting hour: ");
-        class.StartingHour = Console.ReadLine();
+        classes.startingHour = Console.ReadLine();
         Console.Write("\nPlease enter finishing hour: ");
-        class.FinishingHour = Console.ReadLine();
+        classes.finishingHour = Console.ReadLine();
         Console.Write("\nPlease enter student list: ");
-        class.StudentList = Console.ReadLine();
+        classes.studentList = Console.ReadLine();
 
         StringBuilder formattedRecord = new StringBuilder();
-        formattedRecord.Append("Tutor:").Append(class.tutor)
-                       .Append(" / Date:").Append(class.date)
-                       .Append(" / Starting Hour:").Append(class.StartingHour)
-                       .Append(" / Finishing Hour:").Append(class.FinishingHour)
-                       .Append(" / Student List:").Append(class.tutor);
+        formattedRecord.Append("Tutor:").Append(classes.tutor)
+                       .Append(" / Date:").Append(classes.date)
+                       .Append(" / Starting Hour:").Append(classes.startingHour)
+                       .Append(" / Finishing Hour:").Append(classes.finishingHour)
+                       .Append(" / Student List:").Append(classes.tutor);
         string result = formattedRecord.ToString();
 
         if(FileEdit("class_records",recordNumberToEdit,result) == 0)
@@ -1875,7 +1875,7 @@ public static int UserLogin(string username, string password, string userFile)
         formattedRecord.Append("MemberID:").Append(payment.memberID)
                        .Append(" / Paid Amount:").Append(payment.paidAmount)
                        .Append(" / Payment date:").Append(payment.paymentDate)
-                       .Append(" / Next Payment date:").Append(payment.nextPaymentDate)
+                       .Append(" / Next Payment date:").Append(payment.nextPaymentDate);
         string result = formattedRecord.ToString();
 
         if (CheckLCS(result, "payment_records") == 0)
@@ -1901,7 +1901,7 @@ public static int UserLogin(string username, string password, string userFile)
     }
 
     static int EditPaymentRecord(){
-        MemberRecord member;
+        PaymentRecord payment;
         int recordNumberToEdit;
 
         Console.Write("\nPlease enter record number to edit: ");
@@ -1921,7 +1921,7 @@ public static int UserLogin(string username, string password, string userFile)
         formattedRecord.Append("MemberID:").Append(payment.memberID)
                        .Append(" / Paid Amount:").Append(payment.paidAmount)
                        .Append(" / Payment date:").Append(payment.paymentDate)
-                       .Append(" / Next Payment date:").Append(payment.nextPaymentDate)
+                       .Append(" / Next Payment date:").Append(payment.nextPaymentDate);
         string result = formattedRecord.ToString();
         if(FileEdit("payment_records",recordNumberToEdit,result) == 0)
         {

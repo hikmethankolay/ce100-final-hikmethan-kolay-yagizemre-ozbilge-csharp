@@ -6,10 +6,10 @@
 4-)Delete Subscriptions
 5-)Return to Main Menu
 Please enter a choice:
-Please enter memberID:
-Please enter starting date:
-Please enter finishing date:
-Please enter subcription tier:
+Please enter memberID: 
+Please enter starting date: 
+Please enter finishing date: 
+Please enter subscription tier: 
 --------Subscriptions Menu--------
 1-)Show Subscriptions
 2-)Add Subscription
@@ -17,10 +17,10 @@ Please enter subcription tier:
 4-)Delete Subscriptions
 5-)Return to Main Menu
 Please enter a choice:
-Please enter memberID:
-Please enter starting date:
-Please enter finishing date:
-Please enter subcription tier:
+Please enter memberID: 
+Please enter starting date: 
+Please enter finishing date: 
+Please enter subscription tier: 
 There is a very similar record, Dou you wish to add new record anayway?[Y/n]
 --------Subscriptions Menu--------
 1-)Show Subscriptions
@@ -30,10 +30,10 @@ There is a very similar record, Dou you wish to add new record anayway?[Y/n]
 5-)Return to Main Menu
 Please enter a choice:
 Please enter record number to edit:
-Please enter memberID:
-Please enter starting date:
-Please enter finishing date:
-Please enter subcription tier:
+Please enter memberID: 
+Please enter starting date: 
+Please enter finishing date: 
+Please enter subscription tier: 
 Data successfully edited
 --------Subscriptions Menu--------
 1-)Show Subscriptions

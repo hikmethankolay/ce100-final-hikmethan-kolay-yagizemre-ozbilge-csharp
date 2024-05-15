@@ -1,0 +1,45 @@
+
+--------Login Menu--------
+1-)Login
+2-)Register
+3-)Change Password
+4-)Login as a Guest
+5-)Exit
+Please enter a choice:
+Please enter your new username:
+Please enter your new password:
+Please enter your new recovery key:
+------------WARNING------------
+This process will delete all previous records, do you still wish to proceed?[Y/n]:
+--------Login Menu--------
+1-)Login
+2-)Register
+3-)Change Password
+4-)Login as a Guest
+5-)Exit
+Please enter a choice:
+Please enter your recovery key:
+Please enter your new password:
+Recovery Key Approved
+Password changed successfully
+--------Login Menu--------
+1-)Login
+2-)Register
+3-)Change Password
+4-)Login as a Guest
+5-)Exit
+Please enter a choice:
+--------Main Menu--------
+1-)Member Management
+2-)Subscription Tracking
+3-)Class Management
+4-)Payment Processing
+5-)Log out
+Please enter a choice:
+--------Login Menu--------
+1-)Login
+2-)Register
+3-)Change Password
+4-)Login as a Guest
+5-)Exit
+Please enter a choice:

@@ -5,7 +5,7 @@
 3-)Edit Memberships
 4-)Delete Memberships
 5-)Return to Main Menu
-Please enter a choice:
+Please enter a choice: 
 Please enter memberID: 
 Please enter full name: 
 Please enter birth date: 
@@ -17,7 +17,7 @@ Please enter first registration date:
 3-)Edit Memberships
 4-)Delete Memberships
 5-)Return to Main Menu
-Please enter a choice:
+Please enter a choice: 
 Please enter memberID: 
 Please enter full name: 
 Please enter birth date: 
@@ -30,7 +30,7 @@ There is a very similar record, Dou you wish to add new record anayway?[Y/n]
 3-)Edit Memberships
 4-)Delete Memberships
 5-)Return to Main Menu
-Please enter a choice:
+Please enter a choice: 
 Please enter record number to edit: 
 Please enter memberID: 
 Please enter full name: 

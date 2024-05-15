@@ -1665,6 +1665,7 @@ public static int UserLogin(string username, string password, string userFile)
     }
     static int AddClassRecord(){
         ClassRecord class;
+
         Console.Write("\nPlease enter tutor: ");
         class.tutor = Console.ReadLine();
         Console.Write("\nPlease enter date: ");
@@ -1683,6 +1684,8 @@ public static int UserLogin(string username, string password, string userFile)
                        .Append(" / Finishing Hour:").Append(class.FinishingHour)
                        .Append(" / Student List:").Append(class.tutor);
         string result = formattedRecord.ToString();
+
+        
 
         if (CheckLCS(result, "class_records") == 0)
         {
@@ -1707,7 +1710,41 @@ public static int UserLogin(string username, string password, string userFile)
     }
 
     static int EditClassRecord(){
+
+        ClassRecord class;
+
+        int recordNumberToEdit;
+
+        Console.Write("\nPlease enter record number to edit: ");
+        recordNumberToEdit = int.Parse(Console.ReadLine());
+
+        Console.Write("\nPlease enter tutor: ");
+        class.tutor = Console.ReadLine();
+        Console.Write("\nPlease enter date: ");
+        class.date = Console.ReadLine();
+        Console.Write("\nPlease enter starting hour: ");
+        class.StartingHour = Console.ReadLine();
+        Console.Write("\nPlease enter finishing hour: ");
+        class.FinishingHour = Console.ReadLine();
+        Console.Write("\nPlease enter student list: ");
+        class.StudentList = Console.ReadLine();
+
+        StringBuilder formattedRecord = new StringBuilder();
+        formattedRecord.Append("Tutor:").Append(class.tutor)
+                       .Append(" / Date:").Append(class.date)
+                       .Append(" / Starting Hour:").Append(class.StartingHour)
+                       .Append(" / Finishing Hour:").Append(class.FinishingHour)
+                       .Append(" / Student List:").Append(class.tutor);
+        string result = formattedRecord.ToString();
+
+        if(FileEdit("class_records",recordNumberToEdit,result) == 0)
+        {
          return 0;
+        }
+        else 
+        {
+          return -1;
+        }
     }
 
     static int DeleteClassRecord(){

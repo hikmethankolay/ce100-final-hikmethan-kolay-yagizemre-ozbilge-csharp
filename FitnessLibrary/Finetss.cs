@@ -1664,6 +1664,45 @@ public static int UserLogin(string username, string password, string userFile)
         return 0;
     }
     static int AddClassRecord(){
+        ClassRecord class;
+        Console.Write("\nPlease enter tutor: ");
+        class.tutor = Console.ReadLine();
+        Console.Write("\nPlease enter date: ");
+        class.date = Console.ReadLine();
+        Console.Write("\nPlease enter starting hour: ");
+        class.StartingHour = Console.ReadLine();
+        Console.Write("\nPlease enter finishing hour: ");
+        class.FinishingHour = Console.ReadLine();
+        Console.Write("\nPlease enter student list: ");
+        class.StudentList = Console.ReadLine();
+
+        StringBuilder formattedRecord = new StringBuilder();
+        formattedRecord.Append("Tutor:").Append(class.tutor)
+                       .Append(" / Date:").Append(class.date)
+                       .Append(" / Starting Hour:").Append(class.StartingHour)
+                       .Append(" / Finishing Hour:").Append(class.FinishingHour)
+                       .Append(" / Student List:").Append(class.tutor);
+        string result = formattedRecord.ToString();
+
+        if (CheckLCS(result, "class_records") == 0)
+        {
+            Console.Write("\nThere is a very similar record, Do you wish to add new record anyway?[Y/n]: ");
+            char choice = Console.ReadKey().KeyChar;
+            if (choice != 'Y')
+            {
+                return 0;
+            }
+        }
+
+        string fileName = "class_records.bin";
+        if (!File.Exists(fileName))
+        {
+            FileWrite("class_records", result, true);
+        }
+        else
+        {
+            FileAppend("class_records", result);
+        }
          return 0;
     }
 

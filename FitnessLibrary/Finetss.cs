@@ -1747,7 +1747,18 @@ public static int UserLogin(string username, string password, string userFile)
     }
 
     static int DeletePaymentRecord(){
-        return 0;
+        
+        Console.Write("\nPlease enter record number to delete: ");
+        int recordNumberToDelete = int.Parse(Console.ReadLine());
+
+        if (FileLineDelete("payment_records", recordNumberToDelete) == 0)
+        {
+            return 0;
+        }
+        else
+        {
+            return -1;
+        }
     }
 
 }

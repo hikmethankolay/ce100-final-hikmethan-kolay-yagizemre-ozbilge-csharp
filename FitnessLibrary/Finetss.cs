@@ -1590,6 +1590,43 @@ public static int UserLogin(string username, string password, string userFile)
         return 0;
     }
     static int AddSubsRecord(){
+        SybscriptionRecord sub;
+        Console.Write("\nPlease enter memberID: ");
+        sub.memberID = Console.ReadLine();
+        Console.Write("\nPlease enter starting date: ");
+        sub.StartingDate = Console.ReadLine();
+        Console.Write("\nPlease enter finishing date: ");
+        sub.FinishingDate = Console.ReadLine();
+        Console.Write("\nPlease enter subscription tier: ");
+        sub.SubscriptionTier = Console.ReadLine();
+        
+
+        StringBuilder formattedRecord = new StringBuilder();
+        formattedRecord.Append("MemberID:").Append(sub.memberID)
+                       .Append(" / Starting Date:").Append(sub.StartingDate)
+                       .Append(" / Finishing Date:").Append(sub.FinishingDate)
+                       .Append(" / Subscription Tier:").Append(sub.SubscriptionTier)
+        string result = formattedRecord.ToString();
+
+        if (CheckLCS(result, "subcription_records") == 0)
+        {
+            Console.Write("\nThere is a very similar record, Do you wish to add new record anyway?[Y/n]: ");
+            char choice = Console.ReadKey().KeyChar;
+            if (choice != 'Y')
+            {
+                return 0;
+            }
+        }
+
+        string fileName = "subscription_records.bin";
+        if (!File.Exists(fileName))
+        {
+            FileWrite("subscription_records", result, true);
+        }
+        else
+        {
+            FileAppend("subscription_records", result);
+        }
          return 0;
     }
 

@@ -1739,6 +1739,43 @@ public static int UserLogin(string username, string password, string userFile)
         return 0;
     }
     static int AddPaymentRecord(){
+        PaymentRecord payment;
+        Console.Write("\nPlease enter memberID: ");
+        payment.memberID = Console.ReadLine();
+        Console.Write("\nPlease enter paid amount: ");
+        payment.paidAmount = Console.ReadLine();
+        Console.Write("\nPlease enter payment date: ");
+        payment.paymentDate = Console.ReadLine();
+        Console.Write("\nPlease enter next payment date: ");
+        payment.nextPaymentDate = Console.ReadLine();
+        
+
+        StringBuilder formattedRecord = new StringBuilder();
+        formattedRecord.Append("MemberID:").Append(payment.memberID)
+                       .Append(" / Paid Amount:").Append(payment.paidAmount)
+                       .Append(" / Payment date:").Append(payment.paymentDate)
+                       .Append(" / Next Payment date:").Append(payment.nextPaymentDate)
+        string result = formattedRecord.ToString();
+
+        if (CheckLCS(result, "payment_records") == 0)
+        {
+            Console.Write("\nThere is a very similar record, Do you wish to add new record anyway?[Y/n]: ");
+            char choice = Console.ReadKey().KeyChar;
+            if (choice != 'Y')
+            {
+                return 0;
+            }
+        }
+
+        string fileName = "payment_records.bin";
+        if (!File.Exists(fileName))
+        {
+            FileWrite("payment_records", result, true);
+        }
+        else
+        {
+            FileAppend("payment_records", result);
+        }
          return 0;
     }
 

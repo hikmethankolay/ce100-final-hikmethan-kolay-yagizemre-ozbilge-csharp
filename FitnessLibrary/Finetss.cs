@@ -1780,7 +1780,36 @@ public static int UserLogin(string username, string password, string userFile)
     }
 
     static int EditPaymentRecord(){
-         return 0;
+        MemberRecord member;
+        int recordNumberToEdit;
+
+        Console.Write("\nPlease enter record number to edit: ");
+        recordNumberToEdit = int.Parse(Console.ReadLine());
+
+         Console.Write("\nPlease enter memberID: ");
+        payment.memberID = Console.ReadLine();
+        Console.Write("\nPlease enter paid amount: ");
+        payment.paidAmount = Console.ReadLine();
+        Console.Write("\nPlease enter payment date: ");
+        payment.paymentDate = Console.ReadLine();
+        Console.Write("\nPlease enter next payment date: ");
+        payment.nextPaymentDate = Console.ReadLine();
+        
+
+        StringBuilder formattedRecord = new StringBuilder();
+        formattedRecord.Append("MemberID:").Append(payment.memberID)
+                       .Append(" / Paid Amount:").Append(payment.paidAmount)
+                       .Append(" / Payment date:").Append(payment.paymentDate)
+                       .Append(" / Next Payment date:").Append(payment.nextPaymentDate)
+        string result = formattedRecord.ToString();
+        if(FileEdit("payment_records",recordNumberToEdit,result) == 0)
+        {
+            return 0;
+        }
+        else 
+        {
+           return -1;
+        }
     }
 
     static int DeletePaymentRecord(){

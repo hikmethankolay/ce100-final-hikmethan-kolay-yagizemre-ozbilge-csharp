@@ -458,14 +458,14 @@ public string Encode(string text, Dictionary<char, string> codes)
             if (codes.ContainsKey('_'))
                 encodedText += codes['_'];
             else
-                Console.WriteLine("Character '_' is missing in the codes dictionary");
+                Console.Write("Character '_' is missing in the codes dictionary");
         }
         else
         {
             if (codes.ContainsKey(ch))
                 encodedText += codes[ch];
             else
-                Console.WriteLine("Character '" + ch + "' is missing in the codes dictionary");
+                Console.Write("Character '" + ch + "' is missing in the codes dictionary");
         }
     }
 
@@ -540,7 +540,7 @@ public string Decode(string encodedText, Node root) {
     
             if (marker == -1)
             {
-                Console.WriteLine("End of file reached!");
+                Console.Write("End of file reached!");
                 return null;
             }
 
@@ -589,7 +589,7 @@ public string Decode(string encodedText, Node root) {
             }
             else
             {
-                Console.WriteLine("Invalid marker in file!");
+                Console.Write("Invalid marker in file!");
                 return null;
             }
         }
@@ -907,7 +907,7 @@ public static string FileRead(string fileName, bool printToConsole)
 
             if (printToConsole)
             {
-                Console.WriteLine(decodedText);
+                Console.Write(decodedText);
             }
 
             return decodedText;
@@ -915,12 +915,12 @@ public static string FileRead(string fileName, bool printToConsole)
     }
     catch (FileNotFoundException)
     {
-        Console.WriteLine("File operation failed, There is no record");
+        Console.Write("File operation failed, There is no record");
         return "-1";
     }
     catch (IOException)
     {
-        Console.WriteLine("File operation failed, There is no record");
+        Console.Write("File operation failed, There is no record");
         return "-1";
     }
 }
@@ -946,12 +946,12 @@ public static string FileRead(string fileName, bool printToConsole)
         }
         catch (FileNotFoundException)
         {
-            Console.WriteLine("File operation failed, There is no record");
+            Console.Write("File operation failed, There is no record");
             return "-1";
         }
         catch (IOException)
         {
-            Console.WriteLine("File operation failed, There is no record");
+            Console.Write("File operation failed, There is no record");
             return "-1";
         }
     }
@@ -1015,13 +1015,13 @@ public static string FileRead(string fileName, bool printToConsole)
         }
         else
         {
-            Console.WriteLine("\nYou can only edit existing lines");
+            Console.Write("\nYou can only edit existing lines");
             return -1;
         }
 
         string newFileContent = string.Join("", lines);
         FileWrite(fileName, newFileContent, false);
-        Console.WriteLine("\nData successfully edited");
+        Console.Write("\nData successfully edited");
         return 0;
     }
 
@@ -1056,7 +1056,7 @@ public static string FileRead(string fileName, bool printToConsole)
         }
         else
         {
-            Console.WriteLine("\nYou can only erase existing lines");
+            Console.Write("\nYou can only erase existing lines");
             return -1;
         }
 
@@ -1078,7 +1078,7 @@ public static string FileRead(string fileName, bool printToConsole)
 
         string newFileContent = string.Join("", newLines);
         FileWrite(fileName, newFileContent, false);
-        Console.WriteLine("\nData successfully deleted");
+        Console.Write("\nData successfully deleted");
         return 0;
     }
 public static int UserRegister(string newUsername, string newPassword, string newRecoveryKey, string userFile)
@@ -1111,12 +1111,12 @@ public static int UserLogin(string username, string password, string userFile)
 
         if (sha1.CalculateSHA1(username) == usernameRead && sha1.CalculateSHA1(password) == passwordRead)
         {
-            Console.WriteLine("\nLogin Successful");
+            Console.Write("\nLogin Successful");
             return 0;
         }
         else
         {
-            Console.WriteLine("\nWrong username or password");
+            Console.Write("\nWrong username or password");
             return -1;
         }
     }
@@ -1127,7 +1127,7 @@ public static int UserLogin(string username, string password, string userFile)
         string fileContent = FileRead(userFile, mode);
         if (fileContent == "-1")
         {
-            Console.WriteLine("\nThere is no user info. Please register first.");
+            Console.Write("\nThere is no user info. Please register first.");
             return -1;
         }
 
@@ -1142,15 +1142,15 @@ public static int UserLogin(string username, string password, string userFile)
 
         if (sha1.CalculateSHA1(recoveryKey) == recoveryKeyRead)
         {
-            Console.WriteLine("\nRecovery Key Approved");
+            Console.Write("\nRecovery Key Approved");
             string newLoginInfo = $"{usernameRead}/{sha1.CalculateSHA1(newPassword)}/{recoveryKeyRead}";
             FileWrite(userFile, newLoginInfo, false);
-            Console.WriteLine("\nPassword changed successfully");
+            Console.Write("\nPassword changed successfully");
             return 0;
         }
         else
         {
-            Console.WriteLine("\nWrong Recovery Key");
+            Console.Write("\nWrong Recovery Key");
             return -1;
         }
     }
@@ -1174,7 +1174,7 @@ public static int UserLogin(string username, string password, string userFile)
             int choiceLoginMenu;
             if (!int.TryParse(Console.ReadLine(), out choiceLoginMenu))
             {
-                Console.WriteLine("Invalid input.");
+                Console.Write("Invalid input.");
                 continue;
             }
 
@@ -1200,7 +1200,7 @@ public static int UserLogin(string username, string password, string userFile)
             }
             else
             {
-                Console.WriteLine("Please input a correct choice.");
+                Console.Write("Please input a correct choice.");
             }
         }
     }
@@ -1279,7 +1279,7 @@ public static int UserLogin(string username, string password, string userFile)
         }
         else
         {
-            Console.WriteLine("\nProcess terminated.");
+            Console.Write("\nProcess terminated.");
         }
 
         return 0;
@@ -1322,7 +1322,7 @@ public static int UserLogin(string username, string password, string userFile)
             int choiceMainMenu;
             if (!int.TryParse(Console.ReadLine(), out choiceMainMenu))
             {
-                Console.WriteLine("Invalid input.");
+                Console.Write("Invalid input.");
                 continue;
             }
 
@@ -1348,7 +1348,7 @@ public static int UserLogin(string username, string password, string userFile)
             }
             else
             {
-                Console.WriteLine("\nPlease input a correct choice.");
+                Console.Write("\nPlease input a correct choice.");
             }
         }
 
@@ -1375,7 +1375,7 @@ public static int UserLogin(string username, string password, string userFile)
             int choiceMember;
             if (!int.TryParse(Console.ReadLine(), out choiceMember))
             {
-                Console.WriteLine("Invalid input.");
+                Console.Write("Invalid input.");
                 continue;
             }
 
@@ -1546,7 +1546,7 @@ public static int UserLogin(string username, string password, string userFile)
             int choiceSub;
             if (!int.TryParse(Console.ReadLine(), out choiceSub))
             {
-                Console.WriteLine("Invalid input.");
+                Console.Write("Invalid input.");
                 continue;
             }
 
@@ -1620,7 +1620,7 @@ public static int UserLogin(string username, string password, string userFile)
             int choiceClass;
             if (!int.TryParse(Console.ReadLine(), out choiceClass))
             {
-                Console.WriteLine("Invalid input.");
+                Console.Write("Invalid input.");
                 continue;
             }
 
@@ -1695,7 +1695,7 @@ public static int UserLogin(string username, string password, string userFile)
             int choicePayment;
             if (!int.TryParse(Console.ReadLine(), out choicePayment))
             {
-                Console.WriteLine("Invalid input.");
+                Console.Write("Invalid input.");
                 continue;
             }
 

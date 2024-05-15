@@ -191,5 +191,146 @@ public class FitnessTests {
         string testString = "TEXT";
         Assert.Equal(-1, Fitness.CheckLCS(testString, "test1"));
     }
+
+    /// <summary>
+    /// Tests the login menu functionality.
+    /// </summary>
+    [Fact]
+    public void TestLoginMenu()
+    {
+        // Redirect stdout to a file
+        using (var outputWriter = new StreamWriter("login_menu_output_test.bin"))
+        {
+            Console.SetOut(outputWriter);
+
+            // Redirect stdin from a file
+            using (var inputReader = new StreamReader("login_menu_input_test.bin"))
+            {
+                Console.SetIn(inputReader);
+
+                // Call the method to test
+                Fitness.LoginMenu(true);
+            }
+
+            outputWriter.Flush();
+        }
+
+        // Reset stdout and stdin
+        Console.SetOut(new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = true });
+        Console.SetIn(new StreamReader(Console.OpenStandardInput()));
+
+        // Read the expected and actual output files
+        var expectedOutput = Fitness.FileReadForTest("login_menu_expected_output");
+        var actualOutput = Fitness.FileReadForTest("login_menu_output_test");
+
+        // Assert that the outputs are equal
+        Assert.Equal(expectedOutput, actualOutput);
+    }
+
+    /// <summary>
+    /// Tests the register menu functionality.
+    /// </summary>
+    [Fact]
+    public void TestRegisterMenu()
+    {
+        // Redirect stdout to a file
+        using (var outputWriter = new StreamWriter("register_menu_output_test.bin"))
+        {
+            Console.SetOut(outputWriter);
+
+            // Redirect stdin from a file
+            using (var inputReader = new StreamReader("register_menu_input_test.bin"))
+            {
+                Console.SetIn(inputReader);
+
+                // Call the method to test
+                Fitness.RegisterMenu();
+            }
+
+            outputWriter.Flush();
+        }
+
+        // Reset stdout and stdin
+        Console.SetOut(new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = true });
+        Console.SetIn(new StreamReader(Console.OpenStandardInput()));
+
+        // Read the expected and actual output files
+        var expectedOutput = Fitness.FileReadForTest("register_menu_expected_output");
+        var actualOutput = Fitness.FileReadForTest("register_menu_output_test");
+
+        // Assert that the outputs are equal
+        Assert.Equal(expectedOutput, actualOutput);
+    }
+
+     /// <summary>
+    /// Tests the change password menu functionality.
+    /// </summary>
+    [Fact]
+    public void TestChangePasswordMenu()
+    {
+        // Redirect stdout to a file
+        using (var outputWriter = new StreamWriter("password_menu_output_test.bin"))
+        {
+            Console.SetOut(outputWriter);
+
+            // Redirect stdin from a file
+            using (var inputReader = new StreamReader("password_menu_input_test.bin"))
+            {
+                Console.SetIn(inputReader);
+
+                // Call the method to test
+                Fitness.ChangePasswordMenu();
+            }
+
+            outputWriter.Flush();
+        }
+
+        // Reset stdout and stdin
+        Console.SetOut(new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = true });
+        Console.SetIn(new StreamReader(Console.OpenStandardInput()));
+
+        // Read the expected and actual output files
+        var expectedOutput = Fitness.FileReadForTest("password_menu_expected_output");
+        var actualOutput = Fitness.FileReadForTest("password_menu_output_test");
+
+        // Assert that the outputs are equal
+        Assert.Equal(expectedOutput, actualOutput);
+    }
+
+    /// <summary>
+    /// Tests the guest mode functionality.
+    /// </summary>
+    [Fact]
+    public void TestGuestMode()
+    {
+        // Redirect stdout to a file
+        using (var outputWriter = new StreamWriter("guest_menu_output_test.bin"))
+        {
+            Console.SetOut(outputWriter);
+
+            // Redirect stdin from a file
+            using (var inputReader = new StreamReader("guest_menu_input_test.bin"))
+            {
+                Console.SetIn(inputReader);
+
+                // Call the method to test
+                Fitness.MainMenu(true);
+            }
+
+            outputWriter.Flush();
+        }
+
+        // Reset stdout and stdin
+        Console.SetOut(new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = true });
+        Console.SetIn(new StreamReader(Console.OpenStandardInput()));
+
+        // Read the expected and actual output files
+        var expectedOutput = Fitness.FileReadForTest("guest_menu_expected_output");
+        var actualOutput = Fitness.FileReadForTest("guest_menu_output_test");
+
+        // Assert that the outputs are equal
+        Assert.Equal(expectedOutput, actualOutput);
+    }
+
 }
 }

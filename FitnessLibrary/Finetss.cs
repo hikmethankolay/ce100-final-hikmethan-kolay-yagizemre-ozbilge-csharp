@@ -1210,7 +1210,7 @@ public static int UserLogin(string username, string password, string userFile)
     /// </summary>
     /// <param name="isUnitTesting">A bool to check if it is unit testing.</param>
     /// <returns>0.</returns>
-    static int LoginMenu(bool isUnitTesting)
+    public static int LoginMenu(bool isUnitTesting)
     {
         OTPGenerator otp = new OTPGenerator();
         string userName;
@@ -1256,7 +1256,7 @@ public static int UserLogin(string username, string password, string userFile)
     /// Register menu.
     /// </summary>
     /// <returns>0.</returns>
-    static int RegisterMenu()
+    public static int RegisterMenu()
     {
         string userName;
         string password;
@@ -1289,7 +1289,7 @@ public static int UserLogin(string username, string password, string userFile)
     /// Change password menu.
     /// </summary>
     /// <returns>0.</returns>
-    static int ChangePasswordMenu()
+    public static int ChangePasswordMenu()
     {
         string password;
         string recoveryKey;
@@ -1307,7 +1307,7 @@ public static int UserLogin(string username, string password, string userFile)
     /// </summary>
     /// <param name="isGuestMode">A bool to check if user entered with guest mode.</param>
     /// <returns>0.</returns>
-    static int MainMenu(bool isGuestMode)
+    public static int MainMenu(bool isGuestMode)
     {
         MainMenuVariables MainMenuChoice = new MainMenuVariables();
         while (true)
@@ -1360,7 +1360,7 @@ public static int UserLogin(string username, string password, string userFile)
     /// </summary>
     /// <param name="isGuestMode">A bool to check if user entered with guest mode.</param>
     /// <returns>0.</returns>
-    static int MemberMenu(bool isGuestMode)
+    public static int MemberMenu(bool isGuestMode)
     {
         SubMenuVariables SubMenu = new SubMenuVariables();
         while (true)
@@ -1475,7 +1475,7 @@ public static int UserLogin(string username, string password, string userFile)
         recordNumberToEdit = int.Parse(Console.ReadLine());
 
         Console.Write("\nPlease enter memberID: ");
-        member.memberID = int.Parse(Console.ReadLine());
+        member.memberID = Console.ReadLine();
 
         Console.Write("\nPlease enter full name: ");
         member.fullName = Console.ReadLine();
@@ -1531,7 +1531,7 @@ public static int UserLogin(string username, string password, string userFile)
     /// </summary>
     /// <param name="isGuestMode">A bool to check if user entered with guest mode.</param>
     /// <returns>0.</returns>
-    static int SubsMenu(bool isGuestMode)
+    public static int SubsMenu(bool isGuestMode)
     {
         SubMenuVariables SubMenu = new SubMenuVariables();
         while (true)
@@ -1605,7 +1605,7 @@ public static int UserLogin(string username, string password, string userFile)
     /// </summary>
     /// <param name="isGuestMode">A bool to check if user entered with guest mode.</param>
     /// <returns>0.</returns>
-    static int ClassMenu(bool isGuestMode)
+    public static int ClassMenu(bool isGuestMode)
     {
         SubMenuVariables SubMenu = new SubMenuVariables();
         while (true)
@@ -1680,7 +1680,7 @@ public static int UserLogin(string username, string password, string userFile)
     /// </summary>
     /// <param name="isGuestMode">A bool to check if user entered with guest mode.</param>
     /// <returns>0.</returns>
-    static int PaymentMenu(bool isGuestMode)
+    public static int PaymentMenu(bool isGuestMode)
     {
         SubMenuVariables SubMenu = new SubMenuVariables();
         while (true)

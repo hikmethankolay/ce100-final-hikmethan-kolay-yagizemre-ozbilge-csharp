@@ -1590,7 +1590,7 @@ public static int UserLogin(string username, string password, string userFile)
         return 0;
     }
     static int AddSubsRecord(){
-        SybscriptionRecord sub;
+        SubscriptionRecord sub;
         Console.Write("\nPlease enter memberID: ");
         sub.memberID = Console.ReadLine();
         Console.Write("\nPlease enter starting date: ");
@@ -1631,11 +1631,50 @@ public static int UserLogin(string username, string password, string userFile)
     }
 
     static int EditSubsRecord(){
-         return 0;
+        SubscriptionRecord sub;
+        int recordNumberToEdit;
+
+        Console.Write("\nPlease enter record number to edit: ");
+        recordNumberToEdit = int.Parse(Console.ReadLine());
+
+        Console.Write("\nPlease enter memberID: ");
+        sub.memberID = Console.ReadLine();
+        Console.Write("\nPlease enter starting date: ");
+        sub.StartingDate = Console.ReadLine();
+        Console.Write("\nPlease enter finishing date: ");
+        sub.FinishingDate = Console.ReadLine();
+        Console.Write("\nPlease enter subscription tier: ");
+        sub.SubscriptionTier = Console.ReadLine();
+        
+
+        StringBuilder formattedRecord = new StringBuilder();
+        formattedRecord.Append("MemberID:").Append(sub.memberID)
+                       .Append(" / Starting Date:").Append(sub.StartingDate)
+                       .Append(" / Finishing Date:").Append(sub.FinishingDate)
+                       .Append(" / Subscription Tier:").Append(sub.SubscriptionTier)
+        string result = formattedRecord.ToString();
+         if(FileEdit("subscription_records",recordNumberToEdit,result) == 0)
+         {
+            return 0;
+         }
+         else
+         {
+            return -1;
+         }
     }
 
     static int DeleteSubsRecord(){
-        return 0;
+        Console.Write("\nPlease enter record number to delete: ");
+        int recordNumberToDelete = int.Parse(Console.ReadLine());
+
+        if (FileLineDelete("subscription_records", recordNumberToDelete) == 0)
+        {
+            return 0;
+        }
+        else
+        {
+            return -1;
+        }
     }
     /// <summary>
     /// Class menu.

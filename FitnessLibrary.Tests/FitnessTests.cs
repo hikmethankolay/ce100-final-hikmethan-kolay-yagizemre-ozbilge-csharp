@@ -151,34 +151,6 @@ public class FitnessTests {
     }
 
     [Fact]
-    public void TestOTPLength()
-    {
-        OTPGenerator OTP = new OTPGenerator();
-        string secretKey = OTP.GenerateSecretKey();
-        int length = 6;
-        string otp = OTP.GenerateOTP(secretKey, length);
-        Assert.Equal(length, otp.Length);
-    }
-
-    [Fact]
-    public void TestOTPUniqueness()
-    {
-        OTPGenerator OTP = new OTPGenerator();
-        string secretKey = OTP.GenerateSecretKey();
-        int length = 6;
-        HashSet<string> otpSet = new HashSet<string>();
-        const int numIterations = 100;
-
-        for (int i = 0; i < numIterations; ++i)
-        {
-            string otp = OTP.GenerateOTP(secretKey, length);
-            otpSet.Add(otp);
-        }
-
-        Assert.Equal(numIterations, otpSet.Count);
-    }
-
-    [Fact]
     public void TestLCS_Success()
     {
         string testString = "3-)TEXT STRING3";

@@ -712,49 +712,6 @@ public class SHA1
     }
 }
 
-public class OTPGenerator
-{
-    /// <summary>
-    /// Generate secret keys for OTP algorithm.
-    /// </summary>
-    /// <returns>Secret key as string.</returns>
-    public string GenerateSecretKey()
-    {
-        Random rd = new Random();
-        StringBuilder ss = new StringBuilder();
-
-        for (int i = 0; i < 16; ++i)
-        {
-            ss.Append(rd.Next(0, 256).ToString("X2"));
-        }
-
-        return ss.ToString();
-    }
-
-    /// <summary>
-    /// OTP algorithm.
-    /// </summary>
-    /// <param name="secretKey">Generated secret key.</param>
-    /// <param name="length">Desired length of the OTP.</param>
-    /// <returns>OTP.</returns>
-    public string GenerateOTP(string secretKey, int length)
-    {
-        string allowedCharacters = "0123456789";
-        StringBuilder otp = new StringBuilder();
-        Random rd = new Random();
-
-        for (int i = 0; i < length; ++i)
-        {
-            int keyIndex = i % secretKey.Length;
-            int charIndex = rd.Next(0, allowedCharacters.Length);
-            char otpChar = allowedCharacters[(secretKey[keyIndex] + charIndex) % allowedCharacters.Length];
-            otp.Append(otpChar);
-        }
-
-        return otp.ToString();
-    }
-}
-
 public class Fitness {
 
 private static Huffman huffman = new Huffman();

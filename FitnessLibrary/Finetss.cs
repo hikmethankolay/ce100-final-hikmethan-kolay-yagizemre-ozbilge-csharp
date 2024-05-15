@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Linq;
+using OtpNet;
 
 namespace FitnessLibrary {
 /// <summary>
@@ -1212,7 +1213,6 @@ public static int UserLogin(string username, string password, string userFile)
     /// <returns>0.</returns>
     public static int LoginMenu(bool isUnitTesting)
     {
-        OTPGenerator otp = new OTPGenerator();
         string userName;
         string password;
         string userFile = "user";
@@ -1222,15 +1222,17 @@ public static int UserLogin(string username, string password, string userFile)
         password = Console.ReadLine();
 
         if (UserLogin(userName, password, userFile) == 0)
-        {   OTPGenerator OTP = new OTPGenerator();
+        {
 
-            string Otp;
-            string secretKey;
-            
-            secretKey = OTP.GenerateSecretKey();
-            Otp = OTP.GenerateOTP(secretKey, 6);
+            var key = KeyGeneration.GenerateRandomKey(20);
+
+            var base32String = Base32Encoding.ToString(key);
+            var base32Bytes = Base32Encoding.ToBytes(base32String);
+
+            var Otp = new Totp(base32Bytes).ToString();
 
             string userInputOtp;
+
             Console.Write("\nPlease enter single use code that we send you:");
 
             if (isUnitTesting)

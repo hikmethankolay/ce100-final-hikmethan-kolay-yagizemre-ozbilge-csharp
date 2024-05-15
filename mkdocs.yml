@@ -1,11 +1,11 @@
 # Project information
-site_name: ".Net Core Template"
+site_name: "Fitness Management System"
 docs_dir: docs  # Where to find the English markdown files
 site_dir: site  # Where to put the English HTML files
-site_author: 'Asst. Prof. Dr. Uğur CORUH'
-site_url: 'https://ucoruh.github.io/vs-net-core-template/'
+site_author: 'Hikmethan Kolay'
+site_url: 'https://github.com/hikmethankolay/ce100-final-hikmethan-kolay-yagizemre-ozbilge-csharp'
 site_description: >-
-    .Net Core Project Template for CI/CD
+    Fitness Management System
 
 # Repository
 repo_name: 'GitHub'

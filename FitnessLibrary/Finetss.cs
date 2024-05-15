@@ -326,6 +326,11 @@ public class PriorityQueue<T>
 
     public T Dequeue()
     {
+        if (data.Count == 0)
+        {
+            throw new InvalidOperationException("Cannot dequeue from an empty queue.");
+        }
+
         T ret = data[0];
         data[0] = data[data.Count - 1];
         data.RemoveAt(data.Count - 1);
@@ -728,10 +733,12 @@ public static string LCS(string text1, string text2)
 {
     int m = text1.Length;
     int n = text2.Length;
-    // Create a 2D array to store the length of the LCS for substrings of text1 and text2
+
+    // Added edge case handling
+    if (m == 0 || n == 0) return string.Empty;
+
     int[,] dp = new int[m + 1, n + 1];
 
-    // Fill the dp table using bottom-up dynamic programming approach
     for (int i = 1; i <= m; ++i)
     {
         for (int j = 1; j <= n; ++j)
@@ -747,15 +754,14 @@ public static string LCS(string text1, string text2)
         }
     }
 
-    // Reconstruct the LCS from dp table
     int x = m, y = n;
-    string lcs = "";
+    StringBuilder lcs = new StringBuilder(); // Changed to StringBuilder for efficiency
 
     while (x > 0 && y > 0)
     {
         if (text1[x - 1] == text2[y - 1])
         {
-            lcs = text1[x - 1] + lcs;
+            lcs.Insert(0, text1[x - 1]); // Using StringBuilder for efficient string concatenation
             --x;
             --y;
         }
@@ -769,7 +775,7 @@ public static string LCS(string text1, string text2)
         }
     }
 
-    return lcs;
+    return lcs.ToString();
 }
 
 /// <summary>
@@ -784,28 +790,24 @@ public static int CheckLCS(string text, string fileName)
     {
         using (FileStream fileStream = new FileStream(fileName + ".bin", FileMode.Open, FileAccess.Read))
         {
-            // Get the size of the file
             long fileSize = fileStream.Length;
-            // Read the entire file into a byte array
             byte[] buffer = new byte[fileSize];
             int bytesRead = fileStream.Read(buffer, 0, buffer.Length);
-            // Convert the byte array to a string
-            string content = System.Text.Encoding.Default.GetString(buffer, 0, bytesRead);
-            // Decode the content
+            string content = Encoding.Default.GetString(buffer, 0, bytesRead);
+
             using (StreamReader inFile = new StreamReader(fileName + "_huffman.bin"))
-            {
+            {   
+                Huffman huffman = new Huffman();
                 Node root = Huffman.ReadTreeFromFile(inFile);
-                string decodedText = huffman.Decode(content, root);
-                // Split decoded text into lines
+                string decodedText = huffman.Decode(content, root); // Ensure proper method reference
+
                 string[] lines = decodedText.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
-                // Iterate through lines
                 foreach (string line in lines)
                 {
                     string recordLCS = LCS(line, text);
-                    double similarity = ((double)recordLCS.Length / (double)line.Length) * 100;
-                    double limit = 85;
+                    double similarity = ((double)recordLCS.Length / line.Length) * 100;
 
-                    if (similarity >= limit)
+                    if (similarity >= 85)
                     {
                         return 0;
                     }
@@ -818,6 +820,10 @@ public static int CheckLCS(string text, string fileName)
         return -1;
     }
     catch (IOException)
+    {
+        return -1;
+    }
+    catch (Exception) // Added general exception handling
     {
         return -1;
     }

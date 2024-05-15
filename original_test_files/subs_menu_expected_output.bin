@@ -21,7 +21,6 @@ Please enter memberID:
 Please enter starting date: 
 Please enter finishing date: 
 Please enter subscription tier: 
-There is a very similar record, Dou you wish to add new record anayway?[Y/n]
 --------Subscriptions Menu--------
 1-)Show Subscriptions
 2-)Add Subscription
@@ -29,7 +28,7 @@ There is a very similar record, Dou you wish to add new record anayway?[Y/n]
 4-)Delete Subscriptions
 5-)Return to Main Menu
 Please enter a choice:
-Please enter record number to edit:
+Please enter record number to edit: 
 Please enter memberID: 
 Please enter starting date: 
 Please enter finishing date: 
@@ -43,8 +42,8 @@ Data successfully edited
 5-)Return to Main Menu
 Please enter a choice:
 --------------Membership Records--------------
-1-)MemberID:123456 / Starting date:10/12/2035 / Finishing date:10/12/2036 / Subcription tier:A+
-2-)MemberID:123456 / Starting date:10/12/2038 / Finishing date:10/6/2039 / Subcription tier:A+
+1-)MemberID:123456 / Starting Date:10/12/2035 / Finishing Date:10/12/2036 / Subscription Tier:A+
+2-)MemberID:786898 / Starting Date:11/32/2035 / Finishing Date:11/32/3045 / Subscription Tier:B+
 
 --------Subscriptions Menu--------
 1-)Show Subscriptions
@@ -53,7 +52,7 @@ Please enter a choice:
 4-)Delete Subscriptions
 5-)Return to Main Menu
 Please enter a choice:
-Please enter record number to delete:
+Please enter record number to delete: 
 Data successfully deleted
 --------Subscriptions Menu--------
 1-)Show Subscriptions

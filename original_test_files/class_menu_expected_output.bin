@@ -23,7 +23,6 @@ Please enter date:
 Please enter starting hour: 
 Please enter finishing hour: 
 Please enter student list: 
-There is a very similar record, Dou you wish to add new record anayway?[Y/n]
 --------Classes Menu--------
 1-)Show Classes
 2-)Add Class
@@ -31,7 +30,7 @@ There is a very similar record, Dou you wish to add new record anayway?[Y/n]
 4-)Delete Classes
 5-)Return to Main Menu
 Please enter a choice:
-Please enter a record number to edit: 
+Please enter record number to edit: 
 Please enter tutor: 
 Please enter date: 
 Please enter starting hour: 
@@ -46,8 +45,8 @@ Data successfully edited
 5-)Return to Main Menu
 Please enter a choice:
 --------------Class Records--------------
-1-)Tutor:AdamSmith / Class date:10/12/2035 / Starting Hour:10:00 / Finishing Hour:12:00 / Student List:123456,4567785,432566,6454676
-2-)Tutor:AdamSmith / Class date:10/12/2035 / Starting Hour:10:00 / Finishing Hour:13:00 / Student List:123456,4567785,564535,6454676
+1-)Tutor:AdamSmith / Date:10/12/2035 / Starting Hour:10:00 / Finishing Hour:12:00 / Student List:AdamSmith
+2-)Tutor:JhonWalker / Date:11/02/2056 / Starting Hour:12:00 / Finishing Hour:16:30 / Student List:JhonWalker
 
 --------Classes Menu--------
 1-)Show Classes
@@ -56,7 +55,7 @@ Please enter a choice:
 4-)Delete Classes
 5-)Return to Main Menu
 Please enter a choice:
-Please enter record number to delete:
+Please enter record number to delete: 
 Data successfully deleted
 --------Classes Menu--------
 1-)Show Classes

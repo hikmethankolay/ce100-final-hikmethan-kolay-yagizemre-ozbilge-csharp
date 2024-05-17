@@ -2,27 +2,35 @@
 /// System.
 /// </summary>
 using System;
+
 /// <summary>
 /// System.Collections.Generic.
 /// </summary>
 using System.Collections.Generic;
+
 /// <summary>
 /// System.IO.
 /// </summary>
 using System.IO;
+
 /// <summary>
 /// System.Text.
 /// </summary>
 using System.Text;
+
 /// <summary>
 /// System.Linq.
 /// </summary>
 using System.Linq;
+
 /// <summary>
 /// OtpNet.
 /// </summary>
 using OtpNet;
 
+/// <summary>
+/// FitnessLibrary namespace.
+/// </summary>
 namespace FitnessLibrary {
 /// <summary>
 /// Represents a member record.

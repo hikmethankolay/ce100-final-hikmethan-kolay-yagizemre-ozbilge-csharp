@@ -1,8 +1,26 @@
-﻿using System;
+﻿/// <summary>
+/// System.
+/// </summary>
+using System;
+/// <summary>
+/// System.Collections.Generic.
+/// </summary>
 using System.Collections.Generic;
+/// <summary>
+/// System.IO.
+/// </summary>
 using System.IO;
+/// <summary>
+/// System.Text.
+/// </summary>
 using System.Text;
+/// <summary>
+/// System.Linq.
+/// </summary>
 using System.Linq;
+/// <summary>
+/// OtpNet.
+/// </summary>
 using OtpNet;
 
 namespace FitnessLibrary {
@@ -146,7 +164,9 @@ struct LoginMenuVariables {
     /// </summary>
     public int loginMenuExit;
 
-    // Constructor
+    /// <summary>
+    /// Constructor.
+    /// </summary>
     public LoginMenuVariables() {
         run = true;
         loginMenuLogin = 1;
@@ -186,7 +206,9 @@ struct MainMenuVariables {
     /// </summary>
     public int MainMenuLogOut;
 
-    // Constructor
+    /// <summary>
+    /// Constructor.
+    /// </summary>
     public MainMenuVariables() {
         loggedIn = true;
         MainMenuMember = 1;
@@ -222,7 +244,9 @@ struct SubMenuVariables {
     /// </summary>
     public int SubMenuReturn;
 
-    // Constructor
+    /// <summary>
+    /// Constructor.
+    /// </summary>
     public SubMenuVariables() {
         SubMenuShow = 1;
         SubMenuAdd = 2;
@@ -273,6 +297,9 @@ public class Node
 /// </summary>
 public class CompareNode : IComparer<Node>
 {
+    /// <summary>
+    /// Compare function for frequency map.
+    /// </summary>
     public int Compare(Node x, Node y)
     {
         int freqComparison = x.freq.CompareTo(y.freq);
@@ -298,19 +325,34 @@ public class Huffman
 /// </summary>
 public class PriorityQueue<T>
 {
+    /// <summary>
+    /// list for huffman data.
+    /// </summary>
     private List<T> data;
+    /// <summary>
+    /// comparer class for huffman.
+    /// </summary>
     private readonly IComparer<T> comparer;
+    /// <summary>
+    /// count getter.
+    /// </summary>
     public int Count
     {
         get { return data.Count; }
     }
-
+    /// <summary>
+    /// PriorityQueue function.
+    /// </summary>
+    /// <param name="comparer">comparer class object.</param>
     public PriorityQueue(IComparer<T> comparer)
     {
         data = new List<T>();
         this.comparer = comparer;
     }
-
+    /// <summary>
+    /// Enqueue function.
+    /// </summary>
+    /// <param name="item">item.</param>
     public void Enqueue(T item)
     {
         data.Add(item);
@@ -323,7 +365,9 @@ public class PriorityQueue<T>
             i = (i - 1) / 2;
         }
     }
-
+    /// <summary>
+    /// Dequeue function.
+    /// </summary>
     public T Dequeue()
     {
         if (data.Count == 0)
@@ -356,7 +400,9 @@ public class PriorityQueue<T>
 
         return ret;
     }
-
+    /// <summary>
+    /// Peek function.
+    /// </summary>
     public T Peek()
     {
         return data[0];
@@ -425,12 +471,12 @@ public Node BuildHuffmanTree(Dictionary<char, int> freqMap)
         return root.Dequeue(); // Return the root of the Huffman tree
     }
 
-    /// <summary>
-    /// Traverses the Huffman tree and builds the codewords.
-    /// </summary>
-    /// <param name="root">Root of the Huffman tree.</param>
-    /// <param name="code">Current code.</param>
-    /// <param name="codes">Dictionary to store character codes.</param>
+/// <summary>
+/// Traverses the Huffman tree and builds the codewords.
+/// </summary>
+/// <param name="root">Root of the Huffman tree.</param>
+/// <param name="code">Current code.</param>
+/// <param name="codes">Dictionary to store character codes.</param>
     public void BuildCodes(Node root, string code, Dictionary<char, string> codes)
     {
         if (root == null) return;
@@ -447,12 +493,12 @@ public Node BuildHuffmanTree(Dictionary<char, int> freqMap)
         BuildCodes(root.Right, code + "0", codes);
     }
 
-    /// <summary>
-    /// Encodes the input text using Huffman codes.
-    /// </summary>
-    /// <param name="text">Input text.</param>
-    /// <param name="codes">Dictionary of character codes.</param>
-    /// <returns>Encoded text.</returns>
+/// <summary>
+/// Encodes the input text using Huffman codes.
+/// </summary>
+/// <param name="text">Input text.</param>
+/// <param name="codes">Dictionary of character codes.</param>
+/// <returns>Encoded text.</returns>
 public string Encode(string text, Dictionary<char, string> codes)
 {
     string encodedText = "";
@@ -503,6 +549,11 @@ public string Decode(string encodedText, Node root) {
   }
   return decodedText;
 }
+/// <summary>
+/// Writes a tree structure to a file using a <see cref="FileStream"/>.
+/// </summary>
+/// <param name="outFile">The <see cref="FileStream"/> used to write to the file.</param>
+/// <param name="node">The root <see cref="Node"/> of the tree to write.</param>
  public static void WriteTreeToFile(FileStream outFile, Node node)
         {
             if (node.Left == null && node.Right == null)
@@ -539,7 +590,11 @@ public string Decode(string encodedText, Node root) {
                 WriteTreeToFile(outFile, node.Right);
             }
         }
-
+        /// <summary>
+        /// Reads a tree structure from a file using a <see cref="StreamReader"/>.
+        /// </summary>
+        /// <param name="reader">The <see cref="StreamReader"/> used to read from the file.</param>
+        /// <returns>A <see cref="Node"/> representing the root of the tree read from the file, or <c>null</c> if the end of the file is reached or an invalid marker is encountered.</returns>
         public static Node ReadTreeFromFile(StreamReader reader)
         {
             int marker = reader.Read();
@@ -600,9 +655,15 @@ public string Decode(string encodedText, Node root) {
             }
         }
 }
-
+/// <summary>
+/// SHA1 class.
+/// </summary>
 public class SHA1
-{
+{   
+    /// <summary>
+    /// convert text to sha1.
+    /// </summary>
+    /// <param name="input">string to convert.</param>
     public string CalculateSHA1(string input)
     {
         // Convert input string to bytes
@@ -716,11 +777,17 @@ public class SHA1
         return hashString;
     }
 }
-
+/// <summary>
+/// Fitness class.
+/// </summary>
 public class Fitness {
-
+/// <summary>
+/// huffman class object.
+/// </summary>
 private static Huffman huffman = new Huffman();
-
+/// <summary>
+/// sha1 class object.
+/// </summary>
 private static SHA1 sha1 = new SHA1();
 
 /// <summary>
@@ -830,6 +897,13 @@ public static int CheckLCS(string text, string fileName)
 
     return -1;
 }
+/// <summary>
+/// Writes text to a file, encoding it using Huffman coding, and saves the Huffman tree to another file.
+/// </summary>
+/// <param name="fileName">The name of the file to write the encoded text to.</param>
+/// <param name="text">The text to encode and write.</param>
+/// <param name="isFileNew">Indicates whether the file is new. If <c>true</c>, prefixes the text with "1-)" and a newline.</param>
+/// <returns>Returns 0 upon successful completion.</returns>
 public static int FileWrite(string fileName, string text, bool isFileNew)
 {
     if (isFileNew)
@@ -854,7 +928,12 @@ public static int FileWrite(string fileName, string text, bool isFileNew)
 
     return 0;
 }
-
+/// <summary>
+/// Reads encoded text from a file, decodes it using the Huffman tree, and optionally prints the decoded text to the console.
+/// </summary>
+/// <param name="fileName">The name of the file to read the encoded text from.</param>
+/// <param name="printToConsole">Indicates whether to print the decoded text to the console.</param>
+/// <returns>The decoded text, or "-1" if a file operation fails.</returns>
 public static string FileRead(string fileName, bool printToConsole)
 {   
     Huffman huffman = new Huffman();
@@ -888,7 +967,11 @@ public static string FileRead(string fileName, bool printToConsole)
         return "-1";
     }
 }
-
+/// <summary>
+/// Reads the content of a binary file and returns it as a string.
+/// </summary>
+/// <param name="fileName">The name of the file to read.</param>
+/// <returns>The content of the file, or "-1" if the file is not found or an IO error occurs.</returns>
     public static string FileReadForTest(string fileName)
     {
         try
@@ -919,7 +1002,12 @@ public static string FileRead(string fileName, bool printToConsole)
             return "-1";
         }
     }
-
+/// <summary>
+/// Appends text to a file, updating line numbers accordingly.
+/// </summary>
+/// <param name="fileName">The name of the file to append to.</param>
+/// <param name="text">The text to append.</param>
+/// <returns>Returns 0 upon successful completion, or -1 if an error occurs.</returns>
     public static int FileAppend(string fileName, string text)
     {
         bool mode = false;
@@ -953,7 +1041,13 @@ public static string FileRead(string fileName, bool printToConsole)
         FileWrite(fileName, fileContent, false);
         return 0;
     }
-
+/// <summary>
+/// Edits a specific line in a file.
+/// </summary>
+/// <param name="fileName">The name of the file to edit.</param>
+/// <param name="lineNumberToEdit">The line number to edit.</param>
+/// <param name="newLine">The new content for the specified line.</param>
+/// <returns>Returns 0 upon successful completion, or -1 if an error occurs or the line number is invalid.</returns>
     public static int FileEdit(string fileName, int lineNumberToEdit, string newLine)
     {
         bool mode = false;
@@ -988,7 +1082,12 @@ public static string FileRead(string fileName, bool printToConsole)
         Console.Write("\nData successfully edited");
         return 0;
     }
-
+/// <summary>
+/// Deletes a specific line from a file.
+/// </summary>
+/// <param name="fileName">The name of the file to edit.</param>
+/// <param name="lineNumberToDelete">The line number to delete.</param>
+/// <returns>Returns 0 upon successful completion, or -1 if an error occurs or the line number is invalid.</returns>
     public static int FileLineDelete(string fileName, int lineNumberToDelete)
     {
         bool mode = false;
@@ -1045,6 +1144,14 @@ public static string FileRead(string fileName, bool printToConsole)
         Console.Write("\nData successfully deleted");
         return 0;
     }
+/// <summary>
+/// Registers a new user by saving their hashed username, password, and recovery key to a file.
+/// </summary>
+/// <param name="newUsername">The username to register.</param>
+/// <param name="newPassword">The password for the new user.</param>
+/// <param name="newRecoveryKey">The recovery key for the new user.</param>
+/// <param name="userFile">The file to save the user information to.</param>
+/// <returns>Returns 0 upon successful completion.</returns>
 public static int UserRegister(string newUsername, string newPassword, string newRecoveryKey, string userFile)
     {
         newUsername = sha1.CalculateSHA1(newUsername);
@@ -1054,7 +1161,14 @@ public static int UserRegister(string newUsername, string newPassword, string ne
         FileWrite(userFile, loginInfo, false);
         return 0;
     }
-    
+
+/// <summary>
+/// Logs in a user by verifying their hashed username and password against stored data.
+/// </summary>
+/// <param name="username">The username to log in with.</param>
+/// <param name="password">The password to log in with.</param>
+/// <param name="userFile">The file containing the user information.</param>
+/// <returns>Returns 0 if login is successful, or -1 if login fails.</returns>
 public static int UserLogin(string username, string password, string userFile)
     {
         bool mode = false;
@@ -1084,7 +1198,13 @@ public static int UserLogin(string username, string password, string userFile)
             return -1;
         }
     }
-
+/// <summary>
+/// Changes a user's password by verifying the recovery key and updating the stored data.
+/// </summary>
+/// <param name="recoveryKey">The recovery key for the user.</param>
+/// <param name="newPassword">The new password for the user.</param>
+/// <param name="userFile">The file containing the user information.</param>
+/// <returns>Returns 0 if the password is successfully changed, or -1 if the recovery key is incorrect or other errors occur.</returns>
     public static int UserChangePassword(string recoveryKey, string newPassword, string userFile)
     {
         bool mode = false;
@@ -1383,6 +1503,10 @@ public static int UserLogin(string username, string password, string userFile)
 
         return 0;
     }
+    /// <summary>
+    /// Adds a new member record by collecting details from the user and writing to a file.
+    /// </summary>
+    /// <returns>Returns 0 upon successful completion.</returns>
     static int AddMemberRecord()
     {
         MemberRecord member;
@@ -1428,9 +1552,9 @@ public static int UserLogin(string username, string password, string userFile)
     }
 
     /// <summary>
-    /// A function for editing a member record.
+    /// Edits an existing member record by collecting new details from the user.
     /// </summary>
-    /// <returns>0 on success, -1 on failure.</returns>
+    /// <returns>Returns 0 upon successful completion, or -1 if the record number is invalid.</returns>
     static int EditMemberRecord()
     {
         MemberRecord member;
@@ -1472,10 +1596,10 @@ public static int UserLogin(string username, string password, string userFile)
         }
     }
 
-    /// <summary>
-    /// A function for deleting a member record.
+    /// <summary>   
+    /// Deletes an existing member record by its record number.
     /// </summary>
-    /// <returns>0.</returns>
+    /// <returns>Returns 0 upon successful completion, or -1 if the record number is invalid.</returns>
     static int DeleteMemberRecord()
     {
         Console.Write("\nPlease enter record number to delete: ");
@@ -1554,6 +1678,10 @@ public static int UserLogin(string username, string password, string userFile)
 
         return 0;
     }
+    /// <summary>
+    /// Adds a new member record by collecting details from the user and writing to a file.
+    /// </summary>
+    /// <returns>Returns 0 upon successful completion.</returns>
     static int AddSubsRecord(){
         SubscriptionRecord sub;
         Console.Write("\nPlease enter memberID: ");
@@ -1594,7 +1722,10 @@ public static int UserLogin(string username, string password, string userFile)
         }
          return 0;
     }
-
+    /// <summary>
+    /// Edits an existing member record by collecting new details from the user.
+    /// </summary>
+    /// <returns>Returns 0 upon successful completion, or -1 if the record number is invalid </returns>
     static int EditSubsRecord(){
         SubscriptionRecord sub;
         int recordNumberToEdit;
@@ -1627,7 +1758,10 @@ public static int UserLogin(string username, string password, string userFile)
             return -1;
          }
     }
-
+    /// <summary>   
+    /// Deletes an existing member record by its record number.
+    /// </summary>
+    /// <returns>Returns 0 upon successful completion, or -1 if the record number is invalid.</returns>
     static int DeleteSubsRecord(){
         Console.Write("\nPlease enter record number to delete: ");
         int recordNumberToDelete = int.Parse(Console.ReadLine());
@@ -1704,6 +1838,10 @@ public static int UserLogin(string username, string password, string userFile)
 
         return 0;
     }
+    /// <summary>
+    /// Adds a new member record by collecting details from the user and writing to a file.
+    /// </summary>
+    /// <returns>Returns 0 upon successful completion.</returns>
     static int AddClassRecord(){
         ClassRecord classes;
 
@@ -1749,7 +1887,10 @@ public static int UserLogin(string username, string password, string userFile)
         }
          return 0;
     }
-
+    /// <summary>
+    /// Edits an existing member record by collecting new details from the user.
+    /// </summary>
+    /// <returns>Returns 0 upon successful completion, or -1 if the record number is invalid </returns>
     static int EditClassRecord(){
 
         ClassRecord classes;
@@ -1787,7 +1928,10 @@ public static int UserLogin(string username, string password, string userFile)
           return -1;
         }
     }
-
+    /// <summary>   
+    /// Deletes an existing member record by its record number.
+    /// </summary>
+    /// <returns>Returns 0 upon successful completion, or -1 if the record number is invalid.</returns>
     static int DeleteClassRecord(){
         Console.Write("\nPlease enter record number to delete: ");
         int recordNumberToDelete = int.Parse(Console.ReadLine());
@@ -1865,6 +2009,10 @@ public static int UserLogin(string username, string password, string userFile)
 
         return 0;
     }
+    /// <summary>
+    /// Adds a new member record by collecting details from the user and writing to a file.
+    /// </summary>
+    /// <returns>Returns 0 upon successful completion.</returns>
     static int AddPaymentRecord(){
         PaymentRecord payment;
         Console.Write("\nPlease enter memberID: ");
@@ -1905,7 +2053,10 @@ public static int UserLogin(string username, string password, string userFile)
         }
          return 0;
     }
-
+    /// <summary>
+    /// Edits an existing member record by collecting new details from the user.
+    /// </summary>
+    /// <returns>Returns 0 upon successful completion, or -1 if the record number is invalid </returns>
     static int EditPaymentRecord(){
         PaymentRecord payment;
         int recordNumberToEdit;
@@ -1938,7 +2089,10 @@ public static int UserLogin(string username, string password, string userFile)
            return -1;
         }
     }
-
+    /// <summary>   
+    /// Deletes an existing member record by its record number.
+    /// </summary>
+    /// <returns>Returns 0 upon successful completion, or -1 if the record number is invalid.</returns>
     static int DeletePaymentRecord(){
         
         Console.Write("\nPlease enter record number to delete: ");

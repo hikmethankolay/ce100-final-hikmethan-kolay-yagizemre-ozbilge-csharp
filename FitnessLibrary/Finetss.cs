@@ -1316,11 +1316,10 @@ public static int UserLogin(string username, string password, string userFile)
         {
 
             var key = KeyGeneration.GenerateRandomKey(20);
-
             var base32String = Base32Encoding.ToString(key);
             var base32Bytes = Base32Encoding.ToBytes(base32String);
-
-            var Otp = new Totp(base32Bytes).ToString();
+            var totp = new Totp(base32Bytes);
+            var otp = totp.ComputeTotp();
 
             string userInputOtp;
 
@@ -1328,15 +1327,15 @@ public static int UserLogin(string username, string password, string userFile)
 
             if (isUnitTesting)
             {
-                userInputOtp = Otp;
+                userInputOtp = otp;
             }
             else
             {
-                Console.Write($"\n{Otp} is the code, this is just the simulation of scenario:");
+                Console.Write($"\n{otp} is the code, this is just the simulation of scenario:");
                 userInputOtp = Console.ReadLine();
             }
 
-            if (userInputOtp == Otp)
+            if (userInputOtp == otp)
             {
                 MainMenu(false);
             }

@@ -29,6 +29,11 @@ using System.Linq;
 using OtpNet;
 
 /// <summary>
+/// Word32.
+/// </summary>
+using Word32 = System.UInt32;
+
+/// <summary>
 /// FitnessLibrary namespace.
 /// </summary>
 namespace FitnessLibrary {
@@ -664,127 +669,531 @@ public string Decode(string encodedText, Node root) {
         }
 }
 /// <summary>
-/// SHA1 class.
+/// The Sha class provides static methods for computing SHA-1 hash values.
 /// </summary>
-public class SHA1
-{   
-    /// <summary>
-    /// convert text to sha1.
-    /// </summary>
-    /// <param name="input">string to convert.</param>
-    public string CalculateSHA1(string input)
+public static class Sha
+{
+    // Constants K
+    static Word32[] K1;
+
+    // Initial hash values H0
+    static Word32[] H0Sha1;
+
+    static Sha()
     {
-        // Convert input string to bytes
-        byte[] data = Encoding.UTF8.GetBytes(input);
+        DefineK1();
+        DefineH0Sha1();
+    }
 
-        // Initialize variables
-        uint h0 = 0x67452301;
-        uint h1 = 0xEFCDAB89;
-        uint h2 = 0x98BADCFE;
-        uint h3 = 0x10325476;
-        uint h4 = 0xC3D2E1F0;
+    #region Public Functions
 
-        // Pre-processing: append padding bits and length
-        long originalLength = data.Length * 8;
-        int paddingLength = 64 - ((data.Length + 8) % 64); // Adjust padding calculation
-        if (paddingLength == 0)
-            paddingLength = 64;
+    /// <summary>
+    /// Computes the SHA-1 hash value for the specified byte array.
+    /// </summary>
+    /// <param name="plaintext">The byte array to compute the hash for.</param>
+    /// <returns>A byte array containing the SHA-1 hash value.</returns>
+    public static byte[] Sha1(byte[] plaintext)
+    {
+        return Sha1Algorithm(plaintext);
+    }
 
-        byte[] padding = new byte[paddingLength];
-        padding[0] = 0x80;
+    /// <summary>
+    /// Computes the SHA-1 hash value for the specified string.
+    /// </summary>
+    /// <param name="plaintext">The string to compute the hash for.</param>
+    /// <returns>A string containing the hexadecimal representation of the SHA-1 hash value.</returns>
+    public static string Sha1(string plaintext)
+    {
+        return ShaUtilities.ByteArrayToHexString(Sha1(ShaUtilities.StringToByteArray(plaintext)));
+    }
 
-        // Append a single '1' bit
-        Array.Resize(ref data, data.Length + paddingLength);
-        Array.Copy(padding, 0, data, data.Length - paddingLength, paddingLength);
+    #endregion
 
-        // Append original length in bits as a 64-bit big-endian integer
-        byte[] lengthBytes = BitConverter.GetBytes(originalLength);
-        Array.Resize(ref data, data.Length + 8);
-        Array.Copy(lengthBytes, 0, data, data.Length - 8, 8);
+    #region Hash Algorithms
 
-        // Process the message in successive 512-bit chunks
-        for (int i = 0; i < data.Length; i += 64)
+    /// <summary>
+    /// Creates the message schedule for the SHA-1 algorithm from the specified 512-bit block.
+    /// </summary>
+    /// <param name="block">The 512-bit block to create the message schedule from.</param>
+    /// <returns>An array of 80 32-bit words representing the message schedule.</returns>
+    static Word32[] CreateMessageScheduleSha1(Block512 block)
+    {
+        Word32[] W = new Word32[80];
+
+        for (int t = 0; t < 80; t++)
         {
-            uint[] w = new uint[80];
-
-            // Break chunk into sixteen 32-bit big-endian words w[i]
-            for (int j = 0; j < 16; j++)
+            if (t < 16)
             {
-                w[j] = (uint)((data[i + j * 4] << 24) |
-                               (data[i + j * 4 + 1] << 16) |
-                               (data[i + j * 4 + 2] << 8) |
-                               (data[i + j * 4 + 3]));
+                W[t] = block.words[t];
             }
-
-            // Extend the sixteen 32-bit words into eighty 32-bit words
-            for (int j = 16; j < 80; j++)
+            else
             {
-                w[j] = (w[j - 3] ^ w[j - 8] ^ w[j - 14] ^ w[j - 16]);
-                w[j] = (w[j] << 1) | (w[j] >> 31); // Left rotate by 1 bit
+                W[t] = RotL(1, W[t - 3] ^ W[t - 8] ^ W[t - 14] ^ W[t - 16]);
             }
-
-            // Initialize hash value for this chunk
-            uint a = h0;
-            uint b = h1;
-            uint c = h2;
-            uint d = h3;
-            uint e = h4;
-
-            // Main loop
-            for (int j = 0; j < 80; j++)
-            {
-                uint f, k;
-                if (j < 20)
-                {
-                    f = (b & c) | ((~b) & d);
-                    k = 0x5A827999;
-                }
-                else if (j < 40)
-                {
-                    f = b ^ c ^ d;
-                    k = 0x6ED9EBA1;
-                }
-                else if (j < 60)
-                {
-                    f = (b & c) | (b & d) | (c & d);
-                    k = 0x8F1BBCDC;
-                }
-                else
-                {
-                    f = b ^ c ^ d;
-                    k = 0xCA62C1D6;
-                }
-
-                uint temp = ((a << 5) | (a >> 27)) + f + e + k + w[j];
-                e = d;
-                d = c;
-                c = ((b << 30) | (b >> 2));
-                b = a;
-                a = temp;
-            }
-
-            // Add this chunk's hash to result so far
-            h0 += a;
-            h1 += b;
-            h2 += c;
-            h3 += d;
-            h4 += e;
         }
 
-        // Produce the final hash value (big-endian)
-        byte[] hashBytes = new byte[20];
-        Array.Copy(BitConverter.GetBytes(h0), 0, hashBytes, 0, 4);
-        Array.Copy(BitConverter.GetBytes(h1), 0, hashBytes, 4, 4);
-        Array.Copy(BitConverter.GetBytes(h2), 0, hashBytes, 8, 4);
-        Array.Copy(BitConverter.GetBytes(h3), 0, hashBytes, 12, 4);
-        Array.Copy(BitConverter.GetBytes(h4), 0, hashBytes, 16, 4);
+        return W;
+    }
 
-        // Convert hash bytes to string
-        string hashString = BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
+    /// <summary>
+    /// Implements the SHA-1 algorithm for computing the hash value of the specified byte array.
+    /// </summary>
+    /// <param name="plaintext">The byte array to compute the hash for.</param>
+    /// <returns>A byte array containing the SHA-1 hash value.</returns>
+    static byte[] Sha1Algorithm(byte[] plaintext)
+    {
+        Block512[] blocks = ConvertPaddedTextToBlock512Array(PadPlainText512(plaintext));
 
-        return hashString;
+        Word32[] H = new Word32[5];
+        H0Sha1.CopyTo(H, 0);
+
+        for (int i = 0; i < blocks.Length; i++)
+        {
+            Word32[] W = CreateMessageScheduleSha1(blocks[i]);
+
+            Word32 a = H[0];
+            Word32 b = H[1];
+            Word32 c = H[2];
+            Word32 d = H[3];
+            Word32 e = H[4];
+
+            for (int t = 0; t < 80; t++)
+            {
+                Word32 T = RotL(5, a) + f(t, b, c, d) + e + K1[t] + W[t];
+                e = d;
+                d = c;
+                c = RotL(30, b);
+                b = a;
+                a = T;
+            }
+
+            H[0] += a;
+            H[1] += b;
+            H[2] += c;
+            H[3] += d;
+            H[4] += e;
+        }
+
+        return ShaUtilities.Word32ArrayToByteArray(H);
+    }
+
+    #endregion
+
+    #region Plaintext preprocessing functions
+
+    /// <summary>
+    /// Pads the specified byte array so its length in bits is a multiple of 512.
+    /// </summary>
+    /// <param name="plaintext">The byte array to pad.</param>
+    /// <returns>A padded byte array.</returns>
+    static byte[] PadPlainText512(byte[] plaintext)
+    {
+        int numberBits = plaintext.Length * 8;
+        int t = (numberBits + 8 + 64) / 512;
+        int k = 512 * (t + 1) - (numberBits + 8 + 64);
+        int n = k / 8;
+
+        List<byte> paddedtext = plaintext.ToList();
+        paddedtext.Add(0x80);
+
+        for (int i = 0; i < n; i++)
+        {
+            paddedtext.Add(0);
+        }
+
+        byte[] B = BitConverter.GetBytes((ulong)numberBits);
+        Array.Reverse(B);
+
+        for (int i = 0; i < B.Length; i++)
+        {
+            paddedtext.Add(B[i]);
+        }
+
+        return paddedtext.ToArray();
+    }
+
+    /// <summary>
+    /// Converts the padded byte array to an array of 512-bit blocks.
+    /// </summary>
+    /// <param name="paddedtext">The padded byte array to convert.</param>
+    /// <returns>An array of 512-bit blocks.</returns>
+    static Block512[] ConvertPaddedTextToBlock512Array(byte[] paddedtext)
+    {
+        int numberBlocks = (paddedtext.Length * 8) / 512;
+        Block512[] blocks = new Block512[numberBlocks];
+
+        for (int i = 0; i < numberBlocks; i++)
+        {
+            byte[] B = new byte[64];
+
+            for (int j = 0; j < 64; j++)
+            {
+                B[j] = paddedtext[i * 64 + j];
+            }
+
+            Word32[] words = ShaUtilities.ByteArrayToWord32Array(B);
+            blocks[i] = new Block512(words);
+        }
+
+        return blocks;
+    }
+
+    #endregion
+
+    #region Functions used in the hashing process.
+
+    /// <summary>
+    /// Performs a right logical shift on a 32-bit word.
+    /// </summary>
+    /// <param name="n">The number of positions to shift.</param>
+    /// <param name="x">The 32-bit word to shift.</param>
+    /// <returns>The shifted 32-bit word.</returns>
+    static Word32 ShR(int n, Word32 x)
+    {
+        return (x >> n);
+    }
+
+    /// <summary>
+    /// Performs a right rotation on a 32-bit word.
+    /// </summary>
+    /// <param name="n">The number of positions to rotate.</param>
+    /// <param name="x">The 32-bit word to rotate.</param>
+    /// <returns>The rotated 32-bit word.</returns>
+    static Word32 RotR(int n, Word32 x)
+    {
+        return (x >> n) | (x << 32 - n);
+    }
+
+    /// <summary>
+    /// Performs a left rotation on a 32-bit word.
+    /// </summary>
+    /// <param name="n">The number of positions to rotate.</param>
+    /// <param name="x">The 32-bit word to rotate.</param>
+    /// <returns>The rotated 32-bit word.</returns>
+    static Word32 RotL(int n, Word32 x)
+    {
+        return (x << n) | (x >> 32 - n);
+    }
+
+    /// <summary>
+    /// Computes the choice function used in the SHA-1 algorithm.
+    /// </summary>
+    /// <param name="x">The first 32-bit word.</param>
+    /// <param name="y">The second 32-bit word.</param>
+    /// <param name="z">The third 32-bit word.</param>
+    /// <returns>The result of the choice function.</returns>
+    static Word32 Ch(Word32 x, Word32 y, Word32 z)
+    {
+        return (x & y) ^ (~x & z);
+    }
+
+    /// <summary>
+    /// Computes the majority function used in the SHA-1 algorithm.
+    /// </summary>
+    /// <param name="x">The first 32-bit word.</param>
+    /// <param name="y">The second 32-bit word.</param>
+    /// <param name="z">The third 32-bit word.</param>
+    /// <returns>The result of the majority function.</returns>
+    static Word32 Maj(Word32 x, Word32 y, Word32 z)
+    {
+        return (x & y) ^ (x & z) ^ (y & z);
+    }
+
+    /// <summary>
+    /// Computes the parity function used in the SHA-1 algorithm.
+    /// </summary>
+    /// <param name="x">The first 32-bit word.</param>
+    /// <param name="y">The second 32-bit word.</param>
+    /// <param name="z">The third 32-bit word.</param>
+    /// <returns>The result of the parity function.</returns>
+    static Word32 Parity(Word32 x, Word32 y, Word32 z)
+    {
+        return x ^ y ^ z;
+    }
+
+    /// <summary>
+    /// Computes the SHA-1 function used in different rounds of the algorithm.
+    /// </summary>
+    /// <param name="t">The round number.</param>
+    /// <param name="x">The first 32-bit word.</param>
+    /// <param name="y">The second 32-bit word.</param>
+    /// <param name="z">The third 32-bit word.</param>
+    /// <returns>The result of the SHA-1 function.</returns>
+    /// <exception cref="ArgumentException">Thrown when t is out of bounds.</exception>
+    static Word32 f(int t, Word32 x, Word32 y, Word32 z)
+    {
+        if (t >= 0 && t <= 19)
+        {
+            return Ch(x, y, z);
+        }
+        else if (t >= 20 && t <= 39)
+        {
+            return Parity(x, y, z);
+        }
+        else if (t >= 40 && t <= 59)
+        {
+            return Maj(x, y, z);
+        }
+        else if (t >= 60 && t <= 79)
+        {
+            return Parity(x, y, z);
+        }
+        else
+        {
+            throw new ArgumentException("ERROR: t is out of bounds");
+        }
+    }
+
+    #endregion
+
+    #region Functions to define the constants K and the initial hashes H0.
+
+    /// <summary>
+    /// Defines the constants used in the SHA-1 algorithm.
+    /// </summary>
+    static void DefineK1()
+    {
+        K1 = new Word32[80];
+
+        for (int i = 0; i < 80; i++)
+        {
+            if (i <= 19)
+            {
+                K1[i] = 0x5a827999;
+            }
+            else if (i <= 39)
+            {
+                K1[i] = 0x6ed9eba1;
+            }
+            else if (i <= 59)
+            {
+                K1[i] = 0x8f1bbcdc;
+            }
+            else
+            {
+                K1[i] = 0xca62c1d6;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Defines the initial hash values used in the SHA-1 algorithm.
+    /// </summary>
+    static void DefineH0Sha1()
+    {
+        H0Sha1 = new Word32[]
+        {
+            0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476, 0xc3d2e1f0
+        };
+    }
+
+    #endregion
+}
+
+/// <summary>
+/// Represents a 512-bit block used in the SHA-1 algorithm.
+/// </summary>
+class Block512
+{
+    /// <summary>
+    /// The words in the 512-bit block.
+    /// </summary>
+    public Word32[] words;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Block512"/> class with the specified words.
+    /// </summary>
+    /// <param name="words">The words to initialize the block with. Must be an array of 16 elements.</param>
+    public Block512(Word32[] words)
+    {
+        if (words.Length == 16)
+        {
+            this.words = words;
+        }
+        else
+        {
+            Console.WriteLine("ERROR: A block must be 16 words");
+            this.words = null;
+        }
     }
 }
+
+/// <summary>
+/// Provides utility functions for the SHA-1 algorithm.
+/// </summary>
+static class ShaUtilities
+{
+    #region Functions to convert between byte arrays and Word32 arrays
+
+    /// <summary>
+    /// Compares two byte arrays for equality.
+    /// </summary>
+    /// <param name="B1">The first byte array.</param>
+    /// <param name="B2">The second byte array.</param>
+    /// <returns><c>true</c> if the byte arrays are equal; otherwise, <c>false</c>.</returns>
+    public static bool ByteArraysEqual(byte[] B1, byte[] B2)
+    {
+        if ((B1 == null) && (B2 == null))
+            return true;
+
+        if ((B1 == null) || (B2 == null))
+            return false;
+
+        if (B1.Length != B2.Length)
+            return false;
+
+        for (int i = 0; i < B1.Length; i++)
+        {
+            if (B1[i] != B2[i])
+                return false;
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// Converts a string to a byte array.
+    /// </summary>
+    /// <param name="plaintext">The string to convert.</param>
+    /// <returns>A byte array representation of the string.</returns>
+    public static byte[] StringToByteArray(string plaintext)
+    {
+        char[] c = plaintext.ToCharArray();
+        int numberBytes = plaintext.Length;
+        byte[] b = new byte[numberBytes];
+
+        for (int i = 0; i < numberBytes; i++)
+        {
+            b[i] = Convert.ToByte(c[i]);
+        }
+
+        return b;
+    }
+
+    /// <summary>
+    /// Converts a 32-bit word to a byte array.
+    /// </summary>
+    /// <param name="x">The 32-bit word to convert.</param>
+    /// <returns>A byte array representation of the 32-bit word.</returns>
+    public static byte[] Word32ToByteArray(Word32 x)
+    {
+        byte[] b = BitConverter.GetBytes(x);
+        Array.Reverse(b);
+        return b;
+    }
+
+    /// <summary>
+    /// Converts an array of 32-bit words to a byte array.
+    /// </summary>
+    /// <param name="words">The array of 32-bit words to convert.</param>
+    /// <returns>A byte array representation of the 32-bit words.</returns>
+    public static byte[] Word32ArrayToByteArray(Word32[] words)
+    {
+        List<byte> b = new List<byte>();
+
+        for (int i = 0; i < words.Length; i++)
+        {
+            b.AddRange(Word32ToByteArray(words[i]));
+        }
+
+        return b.ToArray();
+    }
+
+    /// <summary>
+    /// Converts a byte array to a 32-bit word starting from the specified index.
+    /// </summary>
+    /// <param name="B">The byte array to convert.</param>
+    /// <param name="startIndex">The starting index in the byte array.</param>
+    /// <returns>The converted 32-bit word.</returns>
+    public static Word32 ByteArrayToWord32(byte[] B, int startIndex)
+    {
+        Word32 c = 256;
+        Word32 output = 0;
+
+        for (int i = startIndex; i < startIndex + 4; i++)
+        {
+            output = output * c + (Word32)B[i];
+        }
+
+        return output;
+    }
+
+    /// <summary>
+    /// Converts a byte array to an array of 32-bit words.
+    /// </summary>
+    /// <param name="B">The byte array to convert.</param>
+    /// <returns>An array of 32-bit words.</returns>
+    public static Word32[] ByteArrayToWord32Array(byte[] B)
+    {
+        int numberBytes = B.Length;
+        int n = numberBytes / 4;
+        Word32[] word32Array = new Word32[n];
+
+        for (int i = 0; i < n; i++)
+        {
+            word32Array[i] = ByteArrayToWord32(B, 4 * i);
+        }
+
+        return word32Array;
+    }
+
+    #endregion
+
+    #region To string methods
+
+    /// <summary>
+    /// Converts a byte to a hexadecimal string representation.
+    /// </summary>
+    /// <param name="b">The byte to convert.</param>
+    /// <returns>A hexadecimal string representation of the byte.</returns>
+    public static string ByteToHexString(byte b)
+    {
+        return Convert.ToString(b, 16).PadLeft(2, '0');
+    }
+
+    /// <summary>
+    /// Converts a byte array to a hexadecimal string representation.
+    /// </summary>
+    /// <param name="a">The byte array to convert.</param>
+    /// <returns>A hexadecimal string representation of the byte array.</returns>
+    public static string ByteArrayToHexString(byte[] a)
+    {
+        string hexString = "";
+
+        for (int i = 0; i < a.Length; i++)
+        {
+            hexString += ByteToHexString(a[i]);
+        }
+
+        return hexString;
+    }
+
+    /// <summary>
+    /// Converts a byte array to a string.
+    /// </summary>
+    /// <param name="X">The byte array to convert.</param>
+    /// <returns>A string representation of the byte array.</returns>
+    public static string ByteArrayToString(byte[] X)
+    {
+        if (X == null)
+        {
+            Console.WriteLine("ERROR: The byte array is null");
+            return null;
+        }
+
+        string s = "";
+
+        for (int i = 0; i < X.Length; i++)
+        {
+            s += (char)X[i];
+        }
+
+        return s;
+    }
+
+    #endregion
+}
+
 /// <summary>
 /// Fitness class.
 /// </summary>
@@ -793,10 +1202,6 @@ public class Fitness {
 /// huffman class object.
 /// </summary>
 private static Huffman huffman = new Huffman();
-/// <summary>
-/// sha1 class object.
-/// </summary>
-private static SHA1 sha1 = new SHA1();
 
 /// <summary>
 /// Finds the longest common subsequence (LCS) of two input strings.
@@ -1162,9 +1567,9 @@ public static string FileRead(string fileName, bool printToConsole)
 /// <returns>Returns 0 upon successful completion.</returns>
 public static int UserRegister(string newUsername, string newPassword, string newRecoveryKey, string userFile)
     {
-        newUsername = sha1.CalculateSHA1(newUsername);
-        newPassword = sha1.CalculateSHA1(newPassword);
-        newRecoveryKey = sha1.CalculateSHA1(newRecoveryKey);
+        newUsername = Sha.Sha1(newUsername);
+        newPassword = Sha.Sha1(newPassword);
+        newRecoveryKey = Sha.Sha1(newRecoveryKey);
         string loginInfo = $"{newUsername}/{newPassword}/{newRecoveryKey}";
         FileWrite(userFile, loginInfo, false);
         return 0;
@@ -1194,8 +1599,8 @@ public static int UserLogin(string username, string password, string userFile)
 
         string usernameRead = parts[0];
         string passwordRead = parts[1];
-
-        if (sha1.CalculateSHA1(username) == usernameRead && sha1.CalculateSHA1(password) == passwordRead)
+        
+        if (Sha.Sha1(username) == usernameRead && Sha.Sha1(password) == passwordRead)
         {
             Console.Write("\nLogin Successful");
             return 0;
@@ -1232,10 +1637,10 @@ public static int UserLogin(string username, string password, string userFile)
         string usernameRead = parts[0];
         string recoveryKeyRead = parts[2];
 
-        if (sha1.CalculateSHA1(recoveryKey) == recoveryKeyRead)
+        if (Sha.Sha1(recoveryKey) == recoveryKeyRead)
         {
             Console.Write("\nRecovery Key Approved");
-            string newLoginInfo = $"{usernameRead}/{sha1.CalculateSHA1(newPassword)}/{recoveryKeyRead}";
+            string newLoginInfo = $"{usernameRead}/{Sha.Sha1(newPassword)}/{recoveryKeyRead}";
             FileWrite(userFile, newLoginInfo, false);
             Console.Write("\nPassword changed successfully");
             return 0;

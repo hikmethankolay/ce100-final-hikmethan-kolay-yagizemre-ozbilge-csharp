@@ -86,7 +86,7 @@ public class FitnessTests {
     [Fact]
     public void TestUserRegister()
     {
-        string testString = "cf8a3324347724049bc4d7578f75e1dc4b98f3c7/adcdba463c0cb1198197c0f8571679e7b317f17f/a03cd5ac546368a972e3bd8a2b1964372b59f5ed";
+        string testString = "249ba36000029bbe97499c03db5a9001f6b734ec/5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8/29773a093e4c80375be4dd8738f4c6afb993b319";
         Fitness.UserRegister("username", "password", "recoverykey", "usertest");
         Assert.Equal(testString, Fitness.FileRead("usertest", false));
     }
@@ -94,7 +94,7 @@ public class FitnessTests {
     [Fact]
     public void TestUserChangePassword()
     {
-        string testString = "cf8a3324347724049bc4d7578f75e1dc4b98f3c7/644a4e90da2b3b76ebae3b60bdee501940257e26/a03cd5ac546368a972e3bd8a2b1964372b59f5ed";
+        string testString = "249ba36000029bbe97499c03db5a9001f6b734ec/f2c57870308dc87f432e5912d4de6f8e322721ba/29773a093e4c80375be4dd8738f4c6afb993b319";
         Fitness.UserChangePassword("recoverykey", "newpassword", "usertest2");
         Assert.Equal(testString, Fitness.FileRead("usertest2", false));
     }
@@ -136,18 +136,18 @@ public class FitnessTests {
     }
     [Fact]
     public void TestSHA1()
-    {   SHA1 sha1 = new SHA1();
+    {
         string testString = "TEST STRING";
         string testString2 = "TEST STRING";
-        Assert.Equal(sha1.CalculateSHA1(testString), sha1.CalculateSHA1(testString2));
+        Assert.Equal(Sha.Sha1(testString), Sha.Sha1(testString2));
     }
 
     [Fact]
     public void TestSHA1Fail()
-    {   SHA1 sha1 = new SHA1();
+    {
         string testString = "TEST STRING";
         string testString2 = "test string";
-        Assert.NotEqual(sha1.CalculateSHA1(testString), sha1.CalculateSHA1(testString2));
+        Assert.NotEqual(Sha.Sha1(testString), Sha.Sha1(testString2));
     }
 
     [Fact]

@@ -29,6 +29,11 @@ using System.Linq;
 using OtpNet;
 
 /// <summary>
+/// Rijndael256.
+/// </summary>
+using Rijndael256;
+
+/// <summary>
 /// Word32.
 /// </summary>
 using Word32 = System.UInt32;
@@ -1273,7 +1278,11 @@ public static int CheckLCS(string text, string fileName)
             long fileSize = fileStream.Length;
             byte[] buffer = new byte[fileSize];
             int bytesRead = fileStream.Read(buffer, 0, buffer.Length);
-            string content = Encoding.Default.GetString(buffer, 0, bytesRead);
+            string encryptedText = Encoding.Default.GetString(buffer, 0, bytesRead);
+            
+            string password = "fitnessmanagementappaespasswordd";
+
+            string content = Rijndael.Decrypt(encryptedText, password, KeySize.Aes256);;
 
             using (StreamReader inFile = new StreamReader(fileName + "_huffman.bin"))
             {   
@@ -1323,15 +1332,18 @@ public static int FileWrite(string fileName, string text, bool isFileNew)
     {
         text = "1-)" + text + "\n";
     }
-
+    
     Dictionary<char, int> freqMap = huffman.Calculatefrequency(text);
     Node root = huffman.BuildHuffmanTree(freqMap);
     Dictionary<char, string> codes = new Dictionary<char, string>();
     huffman.BuildCodes(root, "", codes);
     string encodedText = huffman.Encode(text, codes);
 
+    string password = "fitnessmanagementappaespasswordd";
+    string encryptedText = Rijndael.Encrypt(encodedText, password, KeySize.Aes256);
+
     // Write encoded text directly to the file
-    File.WriteAllText(fileName + ".bin", encodedText);
+    File.WriteAllText(fileName + ".bin", encryptedText);
 
     // Write Huffman tree to another file if needed
     using (FileStream outFileHuffman = new FileStream(fileName + "_huffman.bin", FileMode.Create, FileAccess.Write))
@@ -1349,11 +1361,15 @@ public static int FileWrite(string fileName, string text, bool isFileNew)
 /// <returns>The decoded text, or "-1" if a file operation fails.</returns>
 public static string FileRead(string fileName, bool printToConsole)
 {   
+    
     Huffman huffman = new Huffman();
     try
     {
         // Read encoded text directly from the file
-        string encodedText = File.ReadAllText(fileName + ".bin");
+        string password = "fitnessmanagementappaespasswordd";
+        string encryptedText = File.ReadAllText(fileName + ".bin");
+
+        string encodedText = Rijndael.Decrypt(encryptedText, password, KeySize.Aes256);;
 
         // Read Huffman tree from another file if needed
         using (StreamReader inFile = new StreamReader(fileName + "_huffman.bin"))

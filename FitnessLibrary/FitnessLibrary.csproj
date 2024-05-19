@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Otp.NET" Version="1.4.0" />
+    <PackageReference Include="Rijndael256" Version="3.2.0" />
   </ItemGroup>
 
 </Project>
